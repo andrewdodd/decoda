@@ -261,7 +261,7 @@ def spec_from_workbook(wb: xlrd.Book):
     }
 
 
-if __name__ == "__main__":
+def main():
     parser = argparse.ArgumentParser()
     parser.add_argument(
         "digital_annex_xls",
@@ -283,3 +283,7 @@ if __name__ == "__main__":
     wb = secure_open_workbook(filename=args.digital_annex_xls, on_demand=True)
     spec = spec_from_workbook(wb)
     json.dump(spec, args.json_file, indent=2 if args.pretty else None)
+
+
+if __name__ == "__main__":
+    main()

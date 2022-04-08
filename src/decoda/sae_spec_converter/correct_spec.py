@@ -50,7 +50,7 @@ def replace_bad_resolutions(spns):
     return result
 
 
-if __name__ == "__main__":
+def main():
     parser = argparse.ArgumentParser()
     parser.add_argument(
         "--corrections_path",
@@ -84,3 +84,7 @@ if __name__ == "__main__":
     spec["SPNs"] = replace_bad_resolutions(spec["SPNs"])
 
     json.dump(spec, args.output_file, indent=2 if args.pretty else None)
+
+
+if __name__ == "__main__":
+    main()

@@ -31,7 +31,7 @@ def remove_spns(spns):
     return result
 
 
-if __name__ == "__main__":
+def main():
     parser = argparse.ArgumentParser()
     parser.add_argument(
         "input_file",
@@ -54,3 +54,7 @@ if __name__ == "__main__":
     spec["PGNs"] = remove_pgns(spec["PGNs"])
     spec["SPNs"] = remove_spns(spec["SPNs"])
     json.dump(spec, args.output_file, indent=2 if args.pretty else None)
+
+
+if __name__ == "__main__":
+    main()

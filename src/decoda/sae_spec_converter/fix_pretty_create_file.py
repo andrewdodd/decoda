@@ -1,7 +1,8 @@
 import sys
 from datetime import datetime, timezone
 
-if __name__ == "__main__":
+
+def main():
     output = []
     for line in sys.stdin:
         if "parse_args" in line:
@@ -13,3 +14,7 @@ if __name__ == "__main__":
     output = output[:-2]
     for line in output:
         sys.stdout.write(line)
+
+
+if __name__ == "__main__":
+    main()
