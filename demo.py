@@ -25,7 +25,7 @@ def demo_parts_functions():
 def demo_lookup_pgns(pgn_repo):
     print("LOOKUP PGN INFO")
     print("=" * 50)
-    for id in [0, 256, 61444, 64958]:
+    for id in [0, 65226]:
         pgn = pgn_repo.get_by_id(id)
         print(f"{pgn.id}: {pgn.name}")
         print(
@@ -40,7 +40,7 @@ def demo_lookup_pgns(pgn_repo):
 def demo_lookup_spns(spn_repo):
     print("LOOKUP SPN INFO")
     print("=" * 50)
-    for id in [16, 3714, 3074]:
+    for id in [695, 1215]:
         spn = spn_repo.get_by_id(id)
         print(f"{spn.id}: {spn.name}")
         print(f" -- ValueDecoder: {spn.value_decoder}")
@@ -80,25 +80,7 @@ def demo_decoding(pgn_repo):
     print("=" * 50)
     print("Demo decoding regular PGNs")
     print("=" * 50)
-
     demo_pgn(pgn_repo.get_by_id(0))
-    demo_pgn(pgn_repo.get_by_id(256))
-    demo_pgn(pgn_repo.get_by_id(64953))
-    demo_pgn(pgn_repo.get_by_id(61444))
-
-    print("=" * 50)
-    print()
-    print()
-    print("=" * 50)
-    print("Demo decoding long or variable length PGNs")
-    pgn = pgn_repo.get_by_id(64958)
-    print("=" * 50)
-    print(f"PGN {pgn.id} - {pgn.name}")
-    print()
-    payload = bytes(
-        "\1\x0c\x0b\x12School routeMorning runFirst thing today!XXX", "ascii"
-    )
-    print_decoding_for_payload(payload, pgn)
 
     pgn = pgn_repo.get_by_id(65226)
     print("=" * 50)
