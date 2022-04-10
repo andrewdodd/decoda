@@ -4,11 +4,12 @@ import json
 import sys
 
 import defusedxml
-import xlrd
+import xlrd2 as xlrd
 from defusedxml.common import EntitiesForbidden
 
 
 def secure_open_workbook(**kwargs):
+    defusedxml.defuse_stdlib()
     try:
         return xlrd.open_workbook(**kwargs)
     except EntitiesForbidden:
@@ -108,6 +109,7 @@ def extract_spns(wb):
     data_range_col = get_header_index_any_match(headers, "DATA_RANGE")
     operational_range_col = get_header_index_any_match(headers, "OPERATIONAL_RANGE")
     units_col = get_header_index_any_match(headers, ["UNITS", "UNIT"])
+    document_col = get_header_index_any_match(headers, ["SPN_DOCUMENT"])
 
     result = []
     for i in range(row_num + 1, sheet.nrows):
@@ -127,6 +129,7 @@ def extract_spns(wb):
                 "data_range": str(row[data_range_col]),
                 "operational_range": str(row[operational_range_col]),
                 "units": str(row[units_col]),
+                "source_doc": str(row[document_col]),
             }
         )
 
@@ -161,6 +164,7 @@ def extract_pgns(wb):
     spn_position_col = get_header_index_any_match(
         headers, ["SPN_POSITION_IN_PGN", "SP_POSITION_IN_PG"]
     )
+    document_col = get_header_index_any_match(headers, ["PGN_DOCUMENT"])
 
     result = []
     current_pgn = {"id": "bogus"}
@@ -170,15 +174,17 @@ def extract_pgns(wb):
         if pgn_id == "":
             continue
 
+        pgn_id = int(pgn_id)
         if pgn_id != current_pgn["id"]:
             # new record found
             current_pgn = {
-                "id": int(pgn_id),
+                "id": pgn_id,
                 "name": str(row[name_col]),
                 "acronym": str(row[acronym_col]),
                 "description": str(row[description_col]),
                 "length": int_or_str(row[length_col]),
                 "rate": str(row[rate_col]),
+                "source_doc": str(row[document_col]),
                 "spns": [],
             }
             result.append(current_pgn)

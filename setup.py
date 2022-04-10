@@ -35,6 +35,7 @@ setup(
         # though we don't really use it directly (i.e. is it here just so
         # the copied create_j1939db_json.py file works)
         "pretty_j1939",
+        "xlrd2",
     ],
     entry_points={
         "console_scripts": [
