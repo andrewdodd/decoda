@@ -40,6 +40,7 @@ setup(
     entry_points={
         "console_scripts": [
             "json_from_digital_annex=decoda.sae_spec_converter.json_from_da:main",
+            "json_from_isobus_xlsx=decoda.sae_spec_converter.json_from_isobus_xlsx:main",
             "enrich_spec=decoda.sae_spec_converter.enrich_spec:main",
             "correct_spec=decoda.sae_spec_converter.correct_spec:main",
             "remove_bad_items=decoda.sae_spec_converter.remove_bad_items:main",
