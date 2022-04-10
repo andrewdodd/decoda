@@ -7,7 +7,7 @@ from .json_from_da import extract_pgns, extract_spns, secure_open_workbook
 
 
 def filter_source_doc(item):
-    return '11783' in item.get('source_doc')
+    return "11783" in item.get("source_document")
 
 
 def spec_from_workbook(wb: xlrd.Book):

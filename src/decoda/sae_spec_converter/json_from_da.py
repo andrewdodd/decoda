@@ -109,7 +109,7 @@ def extract_spns(wb):
     data_range_col = get_header_index_any_match(headers, "DATA_RANGE")
     operational_range_col = get_header_index_any_match(headers, "OPERATIONAL_RANGE")
     units_col = get_header_index_any_match(headers, ["UNITS", "UNIT"])
-    document_col = get_header_index_any_match(headers, ["SPN_DOCUMENT"])
+    document_col = get_header_index_any_match(headers, ["SPN_DOCUMENT", "SP_DOCUMENT"])
 
     result = []
     for i in range(row_num + 1, sheet.nrows):
@@ -129,7 +129,7 @@ def extract_spns(wb):
                 "data_range": str(row[data_range_col]),
                 "operational_range": str(row[operational_range_col]),
                 "units": str(row[units_col]),
-                "source_doc": str(row[document_col]),
+                "source_document": str(row[document_col]),
             }
         )
 
@@ -164,7 +164,7 @@ def extract_pgns(wb):
     spn_position_col = get_header_index_any_match(
         headers, ["SPN_POSITION_IN_PGN", "SP_POSITION_IN_PG"]
     )
-    document_col = get_header_index_any_match(headers, ["PGN_DOCUMENT"])
+    document_col = get_header_index_any_match(headers, ["PGN_DOCUMENT", "PG_DOCUMENT"])
 
     result = []
     current_pgn = {"id": "bogus"}
@@ -184,7 +184,7 @@ def extract_pgns(wb):
                 "description": str(row[description_col]),
                 "length": int_or_str(row[length_col]),
                 "rate": str(row[rate_col]),
-                "source_doc": str(row[document_col]),
+                "source_document": str(row[document_col]),
                 "spns": [],
             }
             result.append(current_pgn)
