@@ -71,7 +71,7 @@ correct_spec --corrections_path ./<CORRECTIONS FOLDER> ./J1939DA.enriched.json .
 ```
 remove_bad_items ./J1939DA.corrected.json ./J1939DA.cleaned.json --pretty
 ```
-1. Copy the final spec file to the default name used by Decoda (alternatively you can set the path to the file via `export J1939_SPEC_FILE`):
+1. Copy the final spec file to the default name used by Decoda (alternatively you can set the path to the file via the `J1939_SPEC_FILE` environment variable):
 ```
 cp J1939DA.cleaned.json decoda_spec.json
 ```
@@ -105,8 +105,9 @@ Yes. There seem to be quite a few in this area. Some are focussed on J1939, and 
 ### Is Decoda any good?
 I think so, but hey, I wrote it. I think it does some things well, such as:
 
- - Defining a machine and human readable specification structure for the J1939 application data (i.e. the JSON spec format).
- - Using this structure to decode application layer payloads into a friendly, human and machine readable form.
+ - Using a human and machine readable spec (JSON) to decode application layer payloads into a friendly, human and machine readable form (Python objects, that serialise to JSON).
  - Coping with a lot of weirdness and complexity in J1939, for example:
    - The `demo.py` file shows decoding PGN 65226, which involves repeatable sections; complex bit locations and recursive name lookup for SPN 1214; and encoded values.
    - The `demo.py` file shows the use of SPN 2556 to control how the other SPNs in PGN 60416 should be interpreted.
+ - Defining a machine and human readable specification structure for the J1939 application data (i.e. the JSON spec format).
+ - Providing tools/scripts to bootstrap from the SAE (and isobus) digital annex to get a workable spec file.
