@@ -52,26 +52,27 @@ Also, in order to work seamlessly with this library, there sometimes needs to be
 
 When I extract from a digital annex, I generally run all of these following steps (which use the console scripts exported by the Decoda libary, see [setup.py entry_points](https://github.com/andrewdodd/decoda/blob/main/setup.py#L40-L47)):
 
-1. Extract from the XLS just the raw spec data (replacing `PATH_TO_DIGITAL_ANNEX` with the path to the XLS file):
+1. Extract from the XLS just the raw spec data (replacing `PATH_TO_DIGITAL_ANNEX` with the path to the XLS file):  
 ```
 json_from_digital_annex <PATH_TO_DIGITAL_ANNEX.XLS> ./J1939DA.spec.json --pretty
 ```
 
-1. Run the enrichment script (e.g. identifying enum encodings, data ranges etc)
+2. Run the enrichment script (e.g. identifying enum encodings, data ranges etc)
 ```
 enrich_spec ./J1939DA.spec.json ./J1939DA.enriched.json --pretty
 ```
 
-1. Incorporate any manual corrections files you might have (e.g. I have 4-5 of these for various things, you can make these by hand or reach out if you want any tips):
+3. Incorporate any manual corrections files you might have (e.g. I have 4-5 of these for various things, you can make these by hand or reach out if you want any tips):
 ```
 correct_spec --corrections_path ./<CORRECTIONS FOLDER> ./J1939DA.enriched.json ./J1939DA.corrected.json --pretty
 ```
 
-1. Strip things that we know definitely will not work (items with missing data etc):
+4. Strip things that we know definitely will not work (items with missing data etc):
 ```
 remove_bad_items ./J1939DA.corrected.json ./J1939DA.cleaned.json --pretty
 ```
-1. Copy the final spec file to the default name used by Decoda (alternatively you can set the path to the file via the `J1939_SPEC_FILE` environment variable):
+
+5. Copy the final spec file to the default name used by Decoda (alternatively you can set the path to the file via the `J1939_SPEC_FILE` environment variable):
 ```
 cp J1939DA.cleaned.json decoda_spec.json
 ```
