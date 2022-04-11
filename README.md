@@ -111,3 +111,22 @@ I think so, but hey, I wrote it. I think it does some things well, such as:
    - The `demo.py` file shows the use of SPN 2556 to control how the other SPNs in PGN 60416 should be interpreted.
  - Defining a machine and human readable specification structure for the J1939 application data (i.e. the JSON spec format).
  - Providing tools/scripts to bootstrap from the SAE (and isobus) digital annex to get a workable spec file.
+
+## Extra stuff
+
+### What is the isobus converter for?
+I use this to create a "corrections" file for just the stuff available from the ISOBUS "SPNs and PGNs" XLSX file found here: https://www.isobus.net/isobus/
+
+For example, I do this:
+```
+> # Download the relevant XLSX file from https://www.isobus.net/isobus/, however you like
+> mkdir ./corrections       # make a place for the corrections to go
+> json_from_isobus_xlsx --pretty "SPNs and PGNs.xlsx" ./corrections/iso-11783.json
+```
+
+Then when I run the `correct_spec` script, the corrections from this file will be applied.
+
+### How can I supply the spec from a different location?
+By default the library looks for a file called `decoda_spec.json` in the execution path. If you want to supply a different file, you can set the `J1939_SPEC_FILE` environment variable.
+
+The relevant code is [here](https://github.com/andrewdodd/decoda/blob/main/src/decoda/spec_loader.py#L256).
