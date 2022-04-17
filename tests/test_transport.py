@@ -16,7 +16,7 @@ def bytes_from_payload(payload):
     return bytes(ints)
 
 
-def test_embeddeduse_peer_to_peer_example(spec: J1939Reference):
+def test_embeddeduse_peer_to_peer_example(spec: J1939Spec):
     # https://www.embeddeduse.com/2020/01/17/introduction-to-the-sae-j1939-standard/
     pgn = spec.PGNs.get_by_id(61184)
     payload = "0203029103000000"

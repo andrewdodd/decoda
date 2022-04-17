@@ -1,6 +1,6 @@
 # Copyright Andrew Dodd
+from decoda import spec_provider
 from decoda.main import UnknownReferenceError
-from decoda.spec_loader import repo_provider
 
 
 def location_fmt(value, *args, **kwargs):
@@ -18,7 +18,7 @@ def location_fmt(value, *args, **kwargs):
 
 def refers_to_spn(value, *args, **kwargs):
     try:
-        found = repo_provider.provide().SPNs.get_by_id(value)
+        found = spec_provider.provide().SPNs.get_by_id(value)
         return f"SPN {value} - {found.name}"
     except UnknownReferenceError:
         return f"SPN {value}"

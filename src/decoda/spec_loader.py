@@ -37,7 +37,7 @@ class Repo(Generic[T]):
 
 
 @attr.s(frozen=True)
-class J1939Reference:
+class J1939Spec:
     Manufacturers: Repo[Manufacturer] = attr.ib()
     SPNs: Repo[SPN] = attr.ib()
     PGNs: Repo[PGN] = attr.ib()
@@ -242,7 +242,7 @@ def load_from_file(filename, warn_of_errors=True):
             pgn_ids = sorted(list(set(pgn.get("id") for pgn, _ in pgns_in_error)))
             print(f"PGN IDs with errors: {pgn_ids}")
 
-    return J1939Reference(manufacturers, spns, pgns, industry_groups)
+    return J1939Spec(manufacturers, spns, pgns, industry_groups)
 
 
 # This is a rather ugly technique for now...just want to supply a lazy-loaded
@@ -258,4 +258,4 @@ class LoadOnFirstAccess:
         return self.j1939
 
 
-repo_provider = LoadOnFirstAccess()
+spec_provider = LoadOnFirstAccess()

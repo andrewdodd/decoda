@@ -1,8 +1,7 @@
 #!python3
 from binascii import hexlify
 
-from decoda import ConnectionManager, Decoda, parts_from_can_id
-from decoda.spec_loader import repo_provider
+from decoda import ConnectionManager, Decoda, parts_from_can_id, spec_provider
 
 
 def demo_parts_functions():
@@ -160,7 +159,7 @@ def demo_live_decoding(spec):
 
 def run():
     try:
-        spec = repo_provider.provide()
+        spec = spec_provider.provide()
     except FileNotFoundError:
         print(
             """UNABLE TO RUN DEMO!!!

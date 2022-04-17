@@ -4,13 +4,13 @@ from typing import Dict
 import pytest
 
 from decoda.main import PGN
-from decoda.spec_loader import repo_provider
+from decoda.spec_loader import spec_provider
 
 
 @pytest.fixture(scope="session")
 def spec():
     try:
-        return repo_provider.provide()
+        return spec_provider.provide()
     except FileNotFoundError:
         pytest.skip("Unable to find a spec file")
 

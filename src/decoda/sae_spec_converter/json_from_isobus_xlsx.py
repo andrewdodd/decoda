@@ -1,6 +1,7 @@
 import argparse
 import json
 import sys
+
 import xlrd2 as xlrd
 
 from .json_from_da import extract_pgns, extract_spns, secure_open_workbook

@@ -16,18 +16,18 @@ To avoid polluting your system Python, you should probaby to this in a virtualen
 
 The library gives you:
 
-1. A `spec_loader` module that will load a `J1939Reference` object (a collection of repositories) from a JSON spec file (more on this later):
+1. A `spec_provider` object that will load a `J1939Spec` object (a collection of repositories) from a JSON spec file (more on this later):
    ```
-   from decoda.spec_loader import repo_provider
+   from decoda import spec_provider
    
-   spec = repo_provider.provide()  # This loads from J1939_SPEC_PATH environment variable or "./decoda_spec.json"
+   spec = spec_provider.provide()  # This loads from J1939_SPEC_PATH environment variable or "./decoda_spec.json"
    ```
 
 1. A repository to provide lookup access to Python objects that represent parts of the J1939 specification:
     ```
-    from decoda.spec_loader import repo_provider
+    from decoda.spec_loader import spec_provider
     
-    spec = spec = repo_provider.provide()
+    spec = spec = spec_provider.provide()
     
     # Lookup PGNs, SPNs etc
     pgn_0 = spec.PGNs.get_by_id(0)                     # PGN(id=0, name='Torque/Speed Control 1', ...)
@@ -40,9 +40,9 @@ The library gives you:
 
 1. Utility functions and `PGN` objects that can take an application payload (a `bytearray`) and decode into useful objects:
    ```
-   from decoda import J1939Reference
+   from decoda import J1939Spec
     
-   spec = spec = repo_provider.provide()
+   spec = spec = spec_provider.provide()
     
    pgn_0 = spec.PGNs.get_by_id(0)
    
@@ -51,7 +51,7 @@ The library gives you:
 
 1. Some stateful classes that can be used to defragment from a series of frames:
    ```
-   from decoda import ConnectionManager, Decoda, repo_provider
+   from decoda import ConnectionManager, Decoda, spec_provider
    
    def my_decoded_message_handler(message):
        print(f"Do what we want with the message: {message}")
@@ -59,7 +59,7 @@ The library gives you:
    def me_defrag_error_handler(reason, info):
        print(f"Handle the error if we care: {reason} - {info}")
        
-   spec = repo_provider.provder()
+   spec = spec_provider.provder()
    decoda = Decoda(spec, my_decoded_message_handler)
    cm = ConnectionManager(decoda, me_defrag_error_handler)
    
