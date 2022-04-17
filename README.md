@@ -42,7 +42,7 @@ The library gives you:
    ```
    from decoda import J1939Spec
     
-   spec = spec = spec_provider.provide()
+   spec = spec_provider.provide()
     
    pgn_0 = spec.PGNs.get_by_id(0)
    
