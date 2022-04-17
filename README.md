@@ -2,7 +2,7 @@
 
 This is a utility service for decoding the data from a J1939 payload. It began as a personal side project, but it should be useful if you find yourself with some J1939 frames and only the PDFs/DA from SAE to decode them! 😉
 
-You can find a cut-down (only a few PGNs/SPNs) version of this library in use at: https://www.decoda.cc/
+You can find this library being used with a cutdown sepc file at: https://www.decoda.cc/
 
 ## How to install it?
 
@@ -14,11 +14,60 @@ To avoid polluting your system Python, you should probaby to this in a virtualen
 
 ## What does the install give me?
 
-The installed library will provide three main parts:
+The library gives you:
 
-1. The decoding library that can take a payload and decode it according to the spec based on Python objects created from a spec loader.
-1. A `spec_loader` module, that is used to create the library of Python objects for doing this decoding from a JSON spec file.
-1. A number of conversion scripts that can be used to create the JSON spec file from the SAE digital annex.
+1. A `spec_loader` module that will load a `J1939Reference` object (a collection of repositories) from a JSON spec file (more on this later):
+   ```
+   from decoda.spec_loader import repo_provider
+   
+   spec = repo_provider.provide()  # This loads from J1939_SPEC_PATH environment variable or "./decoda_spec.json"
+   ```
+
+1. A repository to provide lookup access to Python objects that represent parts of the J1939 specification:
+    ```
+    from decoda.spec_loader import repo_provider
+    
+    spec = spec = repo_provider.provide()
+    
+    # Lookup PGNs, SPNs etc
+    pgn_0 = spec.PGNs.get_by_id(0)                     # PGN(id=0, name='Torque/Speed Control 1', ...)
+    spn_695 = spec.SPNs.get_by_id(695)                 # SPN(id=695, name='Engine Override Control Mode', ...)
+    manufacturer_8 = spec.Manufacturers.get_by_id(8)   # Manufacturer(id=8, name='Caterpillar Inc.', ...)
+    ig_1 = spec.IndustryGroups.get_by_id(1)            # IndustryGroup(id=1, description='On-Highway Equipment', ...)
+    spec.preferred_address_name(247, industry_group=1) # 'Auxiliary Power Unit (APU) #1'
+    spec.preferred_address_name(247, industry_group=2) # 'Task Control (Mapping Computer)'
+    ```
+
+1. Utility functions and `PGN` objects that can take an application payload (a `bytearray`) and decode into useful objects:
+   ```
+   from decoda import J1939Reference
+    
+   spec = spec = repo_provider.provide()
+    
+   pgn_0 = spec.PGNs.get_by_id(0)
+   
+   decoded_spns = pgn_0.decode((0x123456789ABCDEF0).to_bytes(8, "big"))
+   ```
+
+1. Some stateful classes that can be used to defragment from a series of frames:
+   ```
+   from decoda import ConnectionManager, Decoda, repo_provider
+   
+   def my_decoded_message_handler(message):
+       print(f"Do what we want with the message: {message}")
+       
+   def me_defrag_error_handler(reason, info):
+       print(f"Handle the error if we care: {reason} - {info}")
+       
+   spec = repo_provider.provder()
+   decoda = Decoda(spec, my_decoded_message_handler)
+   cm = ConnectionManager(decoda, me_defrag_error_handler)
+   
+   for can_id, payload in ...some stream of received frames...:
+       cm.handle_frame(can_id, payload)
+   ```
+
+1. A number of conversion scripts that can be used to create the JSON spec file from the SAE digital annex (more info later on).
 
 ## How to use it?
 
