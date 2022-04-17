@@ -27,7 +27,7 @@ The library gives you:
     ```
     from decoda.spec_loader import spec_provider
     
-    spec = spec = spec_provider.provide()
+    spec = spec_provider.provide()
     
     # Lookup PGNs, SPNs etc
     pgn_0 = spec.PGNs.get_by_id(0)                     # PGN(id=0, name='Torque/Speed Control 1', ...)
