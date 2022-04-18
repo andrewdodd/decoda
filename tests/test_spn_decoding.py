@@ -367,7 +367,7 @@ class TestSPNDecoding:
 
         assert (
             str(e.value)
-            == "not enough bits for SPN - need 16, from 0.0 in value[b'00']"
+            == "not enough bits for SPN - need 16, from 0.0 in payload[b'00']"
         )
 
 

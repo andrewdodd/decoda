@@ -445,9 +445,15 @@ def mask(length):
     return (1 << length) - 1
 
 
-def extract_value_at_location(value, location, bit_length):
+def extract_value_at_location(payload, location, bit_length):
     """
-    Extract a "numeric" value from the byte array at the provided location
+    Extract a "numeric" payload from the byte array at the provided location
+
+    Returns: (value, last_byte_idx)
+
+    where
+     - value: the "bit_length" at "location" from the payload, and
+     - last_byte_idx: is the index of the last byte that the value was in.
     """
     sections = [s.strip() for s in location.split(",")]
     if len(sections) > 1:
@@ -472,14 +478,14 @@ def extract_value_at_location(value, location, bit_length):
             contiguous_length = 9 - int(contiguous.split(".")[1])
 
         contiguous_value, _ = extract_value_at_location(
-            value, contiguous, BitLength(contiguous_length)
+            payload, contiguous, BitLength(contiguous_length)
         )
-        extra_value, last_byte = extract_value_at_location(
-            value, extra, BitLength(bit_length.max_len - contiguous_length)
+        extra_value, last_byte_idx = extract_value_at_location(
+            payload, extra, BitLength(bit_length.max_len - contiguous_length)
         )
         extra_value <<= contiguous_length
 
-        return extra_value + contiguous_value, last_byte
+        return extra_value + contiguous_value, last_byte_idx
 
     section = sections[0]
     if "-" not in section:
@@ -487,22 +493,22 @@ def extract_value_at_location(value, location, bit_length):
         byte, bit = byte_and_bit_from_num(section)
         byte -= 1
         bit -= 1
-        value = value[byte:]
+        payload = payload[byte:]
 
-        if not bit_length.could_fit_in_bytes(value):
+        if not bit_length.could_fit_in_bytes(payload):
             raise ValueError(
-                "not enough bits for SPN - need {}, from {}.{} in value[{}]".format(
-                    bit_length.max_len, byte, byte, hexlify(value)
+                "not enough bits for SPN - need {}, from {}.{} in payload[{}]".format(
+                    bit_length.max_len, byte, byte, hexlify(payload)
                 )
             )
 
-        v = int.from_bytes(value, byteorder="little")
+        v = int.from_bytes(payload, byteorder="little")
         v >>= bit
         v &= mask(bit_length.max_len)
 
         additional_bytes = math.ceil((bit + bit_length.max_len) / 8.0) - 1
-        last_byte = byte + additional_bytes
-        return v, last_byte
+        last_byte_idx = byte + additional_bytes
+        return v, last_byte_idx
 
     # multi byte section
     first, last = section.split("-")
@@ -516,7 +522,7 @@ def extract_value_at_location(value, location, bit_length):
 
     # last address starts on a byte boundary...so everything should be
     # contiguous???
-    return extract_value_at_location(value, first, bit_length)
+    return extract_value_at_location(payload, first, bit_length)
 
 
 @attr.s(frozen=True)
