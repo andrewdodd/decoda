@@ -1,0 +1,1173 @@
+{
+  "Manufacturers": [],
+  "PGNs": [
+    {
+      "id": 0,
+      "name": "Torque/Speed Control 1",
+      "acronym": "TSC1",
+      "description": "",
+      "length": 8,
+      "rate": "To engine: Control Purpose dependent or 10 ms\r\nTo retarder: 50 ms",
+      "source_document": "J1939DA",
+      "spns": [
+        {
+          "id": 695,
+          "start_pos": "1.1"
+        },
+        {
+          "id": 696,
+          "start_pos": "1.3"
+        },
+        {
+          "id": 897,
+          "start_pos": "1.5"
+        },
+        {
+          "id": 898,
+          "start_pos": "2-3"
+        },
+        {
+          "id": 518,
+          "start_pos": "4"
+        },
+        {
+          "id": 3349,
+          "start_pos": "5.1"
+        },
+        {
+          "id": 3350,
+          "start_pos": "5.4"
+        },
+        {
+          "id": 4191,
+          "start_pos": "6.1"
+        },
+        {
+          "id": 4206,
+          "start_pos": "8.1"
+        },
+        {
+          "id": 4207,
+          "start_pos": "8.5"
+        }
+      ]
+    },
+    {
+      "id": 60160,
+      "name": "Transport Protocol - Data Transfer",
+      "acronym": "TP.DT",
+      "description": "",
+      "length": 8,
+      "rate": "",
+      "source_document": "J1939-21",
+      "spns": [
+        {
+          "id": 2572,
+          "start_pos": "1"
+        },
+        {
+          "id": 2573,
+          "start_pos": "2-x"
+        }
+      ],
+      "label": "Transport Protocol - Data Transfer",
+      "transmission_rate": "Per the Parameter Group to be transferred"
+    },
+    {
+      "id": 60416,
+      "name": "Transport Protocol - Connection Mgmt",
+      "acronym": "TP.CM.xx",
+      "description": "",
+      "length": 8,
+      "rate": "",
+      "source_document": "J1939-21",
+      "spns": [
+        {
+          "id": 2556,
+          "start_pos": "1"
+        },
+        {
+          "id": 2557,
+          "start_pos": "2-3"
+        },
+        {
+          "id": 2558,
+          "start_pos": "4"
+        },
+        {
+          "id": 2559,
+          "start_pos": "5"
+        },
+        {
+          "id": 2560,
+          "start_pos": "6-8"
+        },
+        {
+          "id": 2561,
+          "start_pos": "2"
+        },
+        {
+          "id": 2562,
+          "start_pos": "3"
+        },
+        {
+          "id": 2563,
+          "start_pos": "6-8"
+        },
+        {
+          "id": 2564,
+          "start_pos": "2-3"
+        },
+        {
+          "id": 2565,
+          "start_pos": "4"
+        },
+        {
+          "id": 2566,
+          "start_pos": "6-8"
+        },
+        {
+          "id": 2567,
+          "start_pos": "2-3"
+        },
+        {
+          "id": 2568,
+          "start_pos": "4"
+        },
+        {
+          "id": 2569,
+          "start_pos": "6-8"
+        },
+        {
+          "id": 2570,
+          "start_pos": "2"
+        },
+        {
+          "id": 2571,
+          "start_pos": "6-8"
+        }
+      ],
+      "label": "Transport Protocol - Connection Mgmt",
+      "transmission_rate": "Per the Parameter Group to be transferred"
+    },
+    {
+      "id": 65226,
+      "name": "Active Diagnostic Trouble Codes",
+      "acronym": "DM1",
+      "description": "",
+      "length": "*",
+      "rate": "1 s or on change",
+      "source_document": "J1939-73",
+      "spns": [
+        {
+          "id": 987,
+          "start_pos": "1.1"
+        },
+        {
+          "id": 624,
+          "start_pos": "1.3"
+        },
+        {
+          "id": 623,
+          "start_pos": "1.5"
+        },
+        {
+          "id": 1213,
+          "start_pos": "1.7"
+        },
+        {
+          "id": 3041,
+          "start_pos": "2.1"
+        },
+        {
+          "id": 3040,
+          "start_pos": "2.3"
+        },
+        {
+          "id": 3039,
+          "start_pos": "2.5"
+        },
+        {
+          "id": 3038,
+          "start_pos": "2.7"
+        },
+        {
+          "id": 1215,
+          "start_pos": "5.1"
+        },
+        {
+          "id": 1216,
+          "start_pos": "6.1"
+        },
+        {
+          "id": 1706,
+          "start_pos": "6.8"
+        },
+        {
+          "id": 1214,
+          "start_pos": "3-4, 5.6"
+        }
+      ],
+      "label": "Active Diagnostic Trouble Codes",
+      "repeatable_spns": [
+        1214,
+        1215,
+        1216,
+        1706
+      ]
+    }
+  ],
+  "SPNs": [
+    {
+      "id": 518,
+      "name": "Engine Requested Torque/Torque Limit",
+      "description": "",
+      "length": "1 byte",
+      "resolution": 1,
+      "offset": -125,
+      "data_range": {
+        "min": -125.0,
+        "max": 125.0
+      },
+      "operational_range": "0 to 125% engine torque requests, -125% to 0% for retarder torque requests",
+      "units": "%",
+      "source_document": "J1939DA",
+      "bit_length": 8
+    },
+    {
+      "id": 623,
+      "name": "Red Stop Lamp",
+      "description": "",
+      "length": "",
+      "resolution": null,
+      "offset": "",
+      "data_range": {
+        "min": 0,
+        "max": 3
+      },
+      "operational_range": "",
+      "units": "bit",
+      "source_document": "J1939-73",
+      "bit_length": 2,
+      "encodings": {
+        "0": "Lamp Off",
+        "1": "Lamp On",
+        "2": "Reserved",
+        "3": "Not available"
+      }
+    },
+    {
+      "id": 624,
+      "name": "Amber Warning Lamp",
+      "description": "",
+      "length": "",
+      "resolution": null,
+      "offset": "",
+      "data_range": {
+        "min": 0,
+        "max": 3
+      },
+      "operational_range": "",
+      "units": "bit",
+      "source_document": "J1939-73",
+      "bit_length": 2,
+      "encodings": {
+        "0": "Lamp Off",
+        "1": "Lamp On",
+        "2": "Reserved",
+        "3": "Not available"
+      }
+    },
+    {
+      "id": 695,
+      "name": "Engine Override Control Mode",
+      "description": "",
+      "length": "2 bits",
+      "resolution": 1,
+      "offset": 0,
+      "data_range": {
+        "min": 0.0,
+        "max": 3.0
+      },
+      "operational_range": "",
+      "units": "bit",
+      "source_document": "J1939DA",
+      "bit_length": 2,
+      "encodings": {
+        "0": "Override disabled - Disable any existing control commanded by the source of this command.",
+        "1": "Speed control - Govern speed to the included \"desired speed\" value.",
+        "2": "Torque control - Control torque to the included \"desired torque\" value.",
+        "3": "Speed/torque limit control - Limit speed and/or torque based on the included limit values. The speed limit governor is a droop governor where the speed limit value defines the speed at the maximum torque available during this operation."
+      }
+    },
+    {
+      "id": 696,
+      "name": "Engine Requested Speed Control Conditions",
+      "description": "",
+      "length": "2 bits",
+      "resolution": 1,
+      "offset": 0,
+      "data_range": {
+        "min": 0.0,
+        "max": 3.0
+      },
+      "operational_range": "",
+      "units": "bit",
+      "source_document": "J1939DA",
+      "bit_length": 2,
+      "encodings": {
+        "0": "Transient Optimized for driveline disengaged and non-lockup conditions",
+        "1": "Stability Optimized for driveline disengaged and non-lockup conditions",
+        "2": "Stability Optimized for driveline engaged and/or in lockup condition 1 (e.g., vehicle driveline)",
+        "3": "Stability Optimized for driveline engaged and/or in lockup condition 2 (e.g., PTO driveline)"
+      }
+    },
+    {
+      "id": 897,
+      "name": "Override Control Mode Priority",
+      "description": "",
+      "length": "2 bits",
+      "resolution": 1,
+      "offset": 0,
+      "data_range": {
+        "min": 0.0,
+        "max": 3.0
+      },
+      "operational_range": "",
+      "units": "bit",
+      "source_document": "J1939DA",
+      "bit_length": 2,
+      "encodings": {
+        "0": "Highest priority",
+        "1": "High priority",
+        "2": "Medium priority",
+        "3": "Low priority"
+      }
+    },
+    {
+      "id": 898,
+      "name": "Engine Requested Speed/Speed Limit",
+      "description": "",
+      "length": "2 bytes",
+      "resolution": 0.125,
+      "offset": 0,
+      "data_range": {
+        "min": 0.0,
+        "max": 8031.875
+      },
+      "operational_range": "",
+      "units": "rpm",
+      "source_document": "J1939DA",
+      "bit_length": 16
+    },
+    {
+      "id": 987,
+      "name": "Protect Lamp",
+      "description": "",
+      "length": "",
+      "resolution": null,
+      "offset": "",
+      "data_range": {
+        "min": 0,
+        "max": 3
+      },
+      "operational_range": "",
+      "units": "bit",
+      "source_document": "J1939-73",
+      "bit_length": 2,
+      "encodings": {
+        "0": "Lamp Off",
+        "1": "Lamp On",
+        "2": "Reserved",
+        "3": "Not available"
+      }
+    },
+    {
+      "id": 1213,
+      "name": "Malfunction Indicator Lamp",
+      "description": "",
+      "length": "",
+      "resolution": null,
+      "offset": "",
+      "data_range": {
+        "min": 0,
+        "max": 3
+      },
+      "operational_range": "",
+      "units": "bit",
+      "source_document": "J1939-73",
+      "bit_length": 2,
+      "encodings": {
+        "0": "Lamp Off",
+        "1": "Lamp On",
+        "2": "Short MIL for WWH OBD",
+        "3": "Not available"
+      }
+    },
+    {
+      "id": 1214,
+      "name": "Suspect Parameter Number",
+      "description": "",
+      "length": "",
+      "resolution": null,
+      "offset": "",
+      "data_range": {
+        "min": 0,
+        "max": 524287
+      },
+      "operational_range": "",
+      "units": "binary",
+      "source_document": "J1939-73",
+      "bit_length": 19,
+      "encodings": null,
+      "custom": "decoda.well_known.refers_to_spn"
+    },
+    {
+      "id": 1215,
+      "name": "Failure Mode Identifier",
+      "description": "",
+      "length": "",
+      "resolution": null,
+      "offset": "",
+      "data_range": {
+        "min": 0,
+        "max": 31
+      },
+      "operational_range": "",
+      "units": "binary",
+      "source_document": "J1939-73",
+      "bit_length": 5,
+      "encodings": {
+        "0": "Data Valid But Above Normal Operational Range - Most Severe Level",
+        "1": "Data Valid But Below Normal Operational Range - Most Severe Level",
+        "2": "Data Erratic, Intermittent Or Incorrect",
+        "3": "Voltage Above Normal, Or Shorted To High Source",
+        "4": "Voltage Below Normal, Or Shorted To Low Source",
+        "5": "Current Below Normal Or Open Circuit",
+        "6": "Current Above Normal Or Grounded Circuit",
+        "7": "Mechanical System Not Responding Or Out Of Adjustment",
+        "8": "Abnormal Frequency Or Pulse Width Or Period",
+        "9": "Abnormal Update Rate",
+        "10": "Abnormal Rate Of Change",
+        "11": "Root Cause Not Known",
+        "12": "Bad Intelligent Device Or Component",
+        "13": "Out Of Calibration",
+        "14": "Special Instructions",
+        "15": "Data Valid But Above Normal Operating Range - Least Severe Level",
+        "16": "Data Valid But Above Normal Operating Range - Moderately Severe Level",
+        "17": "Data Valid But Below Normal Operating Range - Least Severe Level",
+        "18": "Data Valid But Below Normal Operating Range - Moderately Severe Level",
+        "19": "Received Network Data In Error",
+        "20": "Data Drifted High",
+        "21": "Data Drifted Low",
+        "22": "Reserved For SAE Assignment",
+        "23": "Reserved For SAE Assignment",
+        "24": "Reserved For SAE Assignment",
+        "25": "Reserved For SAE Assignment",
+        "26": "Reserved For SAE Assignment",
+        "27": "Reserved For SAE Assignment",
+        "28": "Reserved For SAE Assignment",
+        "29": "Reserved For SAE Assignment",
+        "30": "Reserved For SAE Assignment",
+        "31": "Condition Exists"
+      },
+      "custom": "decoda.well_known.fmi"
+    },
+    {
+      "id": 1216,
+      "name": "Occurrence Count",
+      "description": "",
+      "length": "",
+      "resolution": null,
+      "offset": "",
+      "data_range": {
+        "min": 0,
+        "max": 127
+      },
+      "operational_range": "",
+      "units": "binary",
+      "source_document": "J1939-73",
+      "bit_length": 7,
+      "encodings": null
+    },
+    {
+      "id": 1706,
+      "name": "SPN Conversion Method",
+      "description": "",
+      "length": "",
+      "resolution": null,
+      "offset": "",
+      "data_range": {
+        "min": 0,
+        "max": 1
+      },
+      "operational_range": "",
+      "units": "bit",
+      "source_document": "J1939-73",
+      "bit_length": 1,
+      "encodings": {
+        "0": "means convert SPNs per the Version 4 definition below",
+        "1": "means convert SPNs per Version 1, 2 or 3 specified below."
+      }
+    },
+    {
+      "id": 2556,
+      "name": "Control Byte (TP.CM)",
+      "description": "",
+      "length": "",
+      "resolution": null,
+      "offset": "",
+      "data_range": {
+        "min": 0,
+        "max": 255
+      },
+      "operational_range": "",
+      "units": "binary",
+      "source_document": "J1939-21",
+      "bit_length": 8,
+      "encodings": {
+        "16": "Request to Send",
+        "17": "Clear to Send",
+        "19": "End of Message ACK",
+        "32": "Broadcast Announce Message",
+        "255": "Connection Abort"
+      }
+    },
+    {
+      "id": 2557,
+      "name": "Total Message Size (TP.CM_RTS)",
+      "description": "",
+      "length": "",
+      "resolution": 1,
+      "offset": 0,
+      "data_range": {
+        "min": 0,
+        "max": 64255
+      },
+      "operational_range": "",
+      "units": "count",
+      "source_document": "J1939-21",
+      "custom": "decoda.well_known.conditionally_applies",
+      "custom_args": {
+        "conditional_on_spn": 2556,
+        "applies_if": "Request to Send"
+      },
+      "bit_length": 16,
+      "encodings": null
+    },
+    {
+      "id": 2558,
+      "name": "Total Number of Packets (TP.CM_RTS)",
+      "description": "",
+      "length": "",
+      "resolution": 1,
+      "offset": 0,
+      "data_range": {
+        "min": 2,
+        "max": 255
+      },
+      "operational_range": "",
+      "units": "count",
+      "source_document": "J1939-21",
+      "custom": "decoda.well_known.conditionally_applies",
+      "custom_args": {
+        "conditional_on_spn": 2556,
+        "applies_if": "Request to Send"
+      },
+      "bit_length": 8,
+      "encodings": null
+    },
+    {
+      "id": 2559,
+      "name": "Maximum Number of Packets (TP.CM_RTS)",
+      "description": "",
+      "length": "",
+      "resolution": 1,
+      "offset": 0,
+      "data_range": {
+        "min": 0,
+        "max": 255
+      },
+      "operational_range": "",
+      "units": "count",
+      "source_document": "J1939-21",
+      "custom": "decoda.well_known.conditionally_applies",
+      "custom_args": {
+        "conditional_on_spn": 2556,
+        "applies_if": "Request to Send"
+      },
+      "bit_length": 8,
+      "encodings": null
+    },
+    {
+      "id": 2560,
+      "name": "Parameter Group Number of the packeted message (TP.CM_RTS)",
+      "description": "",
+      "length": "",
+      "resolution": null,
+      "offset": "",
+      "data_range": {
+        "min": 0,
+        "max": 16777215
+      },
+      "operational_range": "",
+      "units": "binary",
+      "source_document": "J1939-21",
+      "custom": "decoda.well_known.conditionally_applies",
+      "custom_args": {
+        "conditional_on_spn": 2556,
+        "applies_if": "Request to Send"
+      },
+      "bit_length": 24,
+      "encodings": null
+    },
+    {
+      "id": 2561,
+      "name": "Number of Packets that can be sent (TP.CM_CTS)",
+      "description": "",
+      "length": "",
+      "resolution": 1,
+      "offset": 0,
+      "data_range": {
+        "min": 0,
+        "max": 255
+      },
+      "operational_range": "",
+      "units": "count",
+      "source_document": "J1939-21",
+      "custom": "decoda.well_known.conditionally_applies",
+      "custom_args": {
+        "conditional_on_spn": 2556,
+        "applies_if": "Clear to Send"
+      },
+      "bit_length": 8,
+      "encodings": null
+    },
+    {
+      "id": 2562,
+      "name": "Next Packet Number to be sent (TP.CM_CTS)",
+      "description": "",
+      "length": "",
+      "resolution": 1,
+      "offset": 0,
+      "data_range": {
+        "min": 0,
+        "max": 255
+      },
+      "operational_range": "",
+      "units": "count",
+      "source_document": "J1939-21",
+      "custom": "decoda.well_known.conditionally_applies",
+      "custom_args": {
+        "conditional_on_spn": 2556,
+        "applies_if": "Clear to Send"
+      },
+      "bit_length": 8,
+      "encodings": null
+    },
+    {
+      "id": 2563,
+      "name": "Parameter Group Number of the packeted message (TP.CM_CTS)",
+      "description": "",
+      "length": "",
+      "resolution": null,
+      "offset": "",
+      "data_range": {
+        "min": 0,
+        "max": 16777215
+      },
+      "operational_range": "",
+      "units": "binary",
+      "source_document": "J1939-21",
+      "custom": "decoda.well_known.conditionally_applies",
+      "custom_args": {
+        "conditional_on_spn": 2556,
+        "applies_if": "Clear to Send"
+      },
+      "bit_length": 24,
+      "encodings": null
+    },
+    {
+      "id": 2564,
+      "name": "Total Message Size (TP.CM_EndofMsgACK)",
+      "description": "",
+      "length": "",
+      "resolution": 1,
+      "offset": 0,
+      "data_range": {
+        "min": 0,
+        "max": 64255
+      },
+      "operational_range": "",
+      "units": "count",
+      "source_document": "J1939-21",
+      "custom": "decoda.well_known.conditionally_applies",
+      "custom_args": {
+        "conditional_on_spn": 2556,
+        "applies_if": "End of Message ACK"
+      },
+      "bit_length": 16,
+      "encodings": null
+    },
+    {
+      "id": 2565,
+      "name": "Total Number of Packets (TP.CM_EndofMsgACK)",
+      "description": "",
+      "length": "",
+      "resolution": 1,
+      "offset": 0,
+      "data_range": {
+        "min": 0,
+        "max": 255
+      },
+      "operational_range": "",
+      "units": "count",
+      "source_document": "J1939-21",
+      "custom": "decoda.well_known.conditionally_applies",
+      "custom_args": {
+        "conditional_on_spn": 2556,
+        "applies_if": "End of Message ACK"
+      },
+      "bit_length": 8,
+      "encodings": null
+    },
+    {
+      "id": 2566,
+      "name": "Parameter Group Number of the packeted message (TP.CM_EndofMsgACK)",
+      "description": "",
+      "length": "",
+      "resolution": null,
+      "offset": "",
+      "data_range": {
+        "min": 0,
+        "max": 16777215
+      },
+      "operational_range": "",
+      "units": "binary",
+      "source_document": "J1939-21",
+      "custom": "decoda.well_known.conditionally_applies",
+      "custom_args": {
+        "conditional_on_spn": 2556,
+        "applies_if": "End of Message ACK"
+      },
+      "bit_length": 24,
+      "encodings": null
+    },
+    {
+      "id": 2567,
+      "name": "Total Message Size (TP.CM_BAM)",
+      "description": "",
+      "length": "",
+      "resolution": 1,
+      "offset": 0,
+      "data_range": {
+        "min": 0,
+        "max": 64255
+      },
+      "operational_range": "",
+      "units": "count",
+      "source_document": "J1939-21",
+      "custom": "decoda.well_known.conditionally_applies",
+      "custom_args": {
+        "conditional_on_spn": 2556,
+        "applies_if": "Broadcast Announce Message"
+      },
+      "bit_length": 16,
+      "encodings": null
+    },
+    {
+      "id": 2568,
+      "name": "Total Number of Packets (TP.CM_BAM)",
+      "description": "",
+      "length": "",
+      "resolution": 1,
+      "offset": 0,
+      "data_range": {
+        "min": 0,
+        "max": 255
+      },
+      "operational_range": "",
+      "units": "count",
+      "source_document": "J1939-21",
+      "custom": "decoda.well_known.conditionally_applies",
+      "custom_args": {
+        "conditional_on_spn": 2556,
+        "applies_if": "Broadcast Announce Message"
+      },
+      "bit_length": 8,
+      "encodings": null
+    },
+    {
+      "id": 2569,
+      "name": "Parameter Group Number of the packeted message (TP.CM_BAM)",
+      "description": "",
+      "length": "",
+      "resolution": null,
+      "offset": "",
+      "data_range": {
+        "min": 0,
+        "max": 16777215
+      },
+      "operational_range": "",
+      "units": "binary",
+      "source_document": "J1939-21",
+      "custom": "decoda.well_known.conditionally_applies",
+      "custom_args": {
+        "conditional_on_spn": 2556,
+        "applies_if": "Broadcast Announce Message"
+      },
+      "bit_length": 24,
+      "encodings": null
+    },
+    {
+      "id": 2570,
+      "name": "Connection Abort Reason",
+      "description": "",
+      "length": "",
+      "resolution": 1,
+      "offset": 0,
+      "data_range": {
+        "min": 0,
+        "max": 255
+      },
+      "operational_range": "",
+      "units": "count",
+      "source_document": "J1939-21",
+      "custom": "decoda.well_known.conditionally_applies",
+      "custom_args": {
+        "conditional_on_spn": 2556,
+        "applies_if": "Connection Abort"
+      },
+      "bit_length": 8,
+      "encodings": {
+        "1": "Already in one or more connection managed sessions and cannot support another.",
+        "2": "System resources were needed for another task so this connection managed session was terminated.",
+        "3": "A timeout occurred and this is the connection abort to close the session.",
+        "4-250": "Reserved for SAE assignment.",
+        "251-255": "Per J1939-71 definitions"
+      }
+    },
+    {
+      "id": 2571,
+      "name": "Parameter Group Number of packeted message (TP.CM_Conn_Abort)",
+      "description": "",
+      "length": "",
+      "resolution": null,
+      "offset": "",
+      "data_range": {
+        "min": 0,
+        "max": 16777215
+      },
+      "operational_range": "",
+      "units": "binary",
+      "source_document": "J1939-21",
+      "custom": "decoda.well_known.conditionally_applies",
+      "custom_args": {
+        "conditional_on_spn": 2556,
+        "applies_if": "Connection Abort"
+      },
+      "bit_length": 24,
+      "encodings": null
+    },
+    {
+      "id": 2572,
+      "name": "Sequence Number (TP.DT)",
+      "description": "",
+      "length": "",
+      "resolution": 1,
+      "offset": 0,
+      "data_range": {
+        "min": 0,
+        "max": 255
+      },
+      "operational_range": "",
+      "units": "count",
+      "source_document": "J1939-21",
+      "bit_length": 8,
+      "encodings": null
+    },
+    {
+      "id": 2573,
+      "name": "Packetized Data (TP.DT)",
+      "description": "",
+      "length": "",
+      "resolution": null,
+      "offset": 0,
+      "data_range": {
+        "min": 9,
+        "max": 1784
+      },
+      "operational_range": "",
+      "units": "bytearray",
+      "source_document": "J1939-21",
+      "bit_length": 14272,
+      "encodings": null
+    },
+    {
+      "id": 3038,
+      "name": "Flash Malfunction Indicator Lamp (MIL)",
+      "description": "",
+      "length": "",
+      "resolution": null,
+      "offset": "",
+      "data_range": {
+        "min": 0,
+        "max": 3
+      },
+      "operational_range": "",
+      "units": "bit",
+      "source_document": "J1939-73",
+      "bit_length": 2,
+      "encodings": {
+        "0": "Slow Flash (1 Hz, 50 % duty cycle)",
+        "1": "Fast Flash (2 Hz or faster, 50% duty cycle)",
+        "2": "Class C DTC",
+        "3": "Unavailable / Do Not Flash"
+      }
+    },
+    {
+      "id": 3039,
+      "name": "Flash Red Stop Lamp (RSL)",
+      "description": "",
+      "length": "",
+      "resolution": null,
+      "offset": "",
+      "data_range": {
+        "min": 0,
+        "max": 3
+      },
+      "operational_range": "",
+      "units": "bit",
+      "source_document": "J1939-73",
+      "bit_length": 2,
+      "encodings": {
+        "0": "Slow Flash (1 Hz, 50 % duty cycle)",
+        "1": "Fast Flash (2 Hz or faster, 50% duty cycle)",
+        "2": "Reserved",
+        "3": "Unavailable / Do Not Flash"
+      }
+    },
+    {
+      "id": 3040,
+      "name": "Flash Amber Warning Lamp (AWL)",
+      "description": "",
+      "length": "",
+      "resolution": null,
+      "offset": "",
+      "data_range": {
+        "min": 0,
+        "max": 3
+      },
+      "operational_range": "",
+      "units": "bit",
+      "source_document": "J1939-73",
+      "bit_length": 2,
+      "encodings": {
+        "0": "Slow Flash (1 Hz, 50 % duty cycle)",
+        "1": "Fast Flash (2 Hz or faster, 50% duty cycle)",
+        "2": "Reserved",
+        "3": "Unavailable / Do Not Flash"
+      }
+    },
+    {
+      "id": 3041,
+      "name": "Flash Protect Lamp",
+      "description": "",
+      "length": "",
+      "resolution": null,
+      "offset": "",
+      "data_range": {
+        "min": 0,
+        "max": 3
+      },
+      "operational_range": "",
+      "units": "bit",
+      "source_document": "J1939-73",
+      "bit_length": 2,
+      "encodings": {
+        "0": "Slow Flash (1 Hz, 50 % duty cycle)",
+        "1": "Fast Flash (2 Hz or faster, 50% duty cycle)",
+        "2": "Reserved",
+        "3": "Unavailable / Do Not Flash"
+      }
+    },
+    {
+      "id": 3349,
+      "name": "TSC1 Transmission Rate",
+      "description": "",
+      "length": "3 bits",
+      "resolution": 1,
+      "offset": 0,
+      "data_range": {
+        "min": 0.0,
+        "max": 7.0
+      },
+      "operational_range": "",
+      "units": "bit",
+      "source_document": "J1939DA",
+      "bit_length": 3,
+      "encodings": {
+        "0": "1000 ms transmission rate",
+        "1": "750 ms transmission rate",
+        "2": "500 ms transmission rate",
+        "3": "250 ms transmission rate",
+        "4": "100 ms transmission rate",
+        "5": "50 ms transmission rate",
+        "6": "20 ms transmission rate",
+        "7": "Use standard TSC1 transmission rates of 10 ms to engine"
+      }
+    },
+    {
+      "id": 3350,
+      "name": "TSC1 Control Purpose",
+      "description": "",
+      "length": "5 bits",
+      "resolution": 1,
+      "offset": 0,
+      "data_range": {
+        "min": 0.0,
+        "max": 31.0
+      },
+      "operational_range": "",
+      "units": "bit",
+      "source_document": "J1939DA",
+      "bit_length": 5,
+      "encodings": {
+        "0": "P1 = Accelerator Pedal/Operator Selection",
+        "1": "P2 = Cruise Control",
+        "2": "P3 = PTO Governor",
+        "3": "P4 = Road Speed Governor",
+        "4": "P5 = Engine Protection",
+        "5": "P6 = Transient-Optimized Torque Limit",
+        "6": "P7 = Automated Driving System Input",
+        "7": "P8-P31 = Reserved for SAE Assignment",
+        "8": "P8-P31 = Reserved for SAE Assignment",
+        "9": "P8-P31 = Reserved for SAE Assignment",
+        "10": "P8-P31 = Reserved for SAE Assignment",
+        "11": "P8-P31 = Reserved for SAE Assignment",
+        "12": "P8-P31 = Reserved for SAE Assignment",
+        "13": "P8-P31 = Reserved for SAE Assignment",
+        "14": "P8-P31 = Reserved for SAE Assignment",
+        "15": "P8-P31 = Reserved for SAE Assignment",
+        "16": "P8-P31 = Reserved for SAE Assignment",
+        "17": "P8-P31 = Reserved for SAE Assignment",
+        "18": "P8-P31 = Reserved for SAE Assignment",
+        "19": "P8-P31 = Reserved for SAE Assignment",
+        "20": "P8-P31 = Reserved for SAE Assignment",
+        "21": "P8-P31 = Reserved for SAE Assignment",
+        "22": "P8-P31 = Reserved for SAE Assignment",
+        "23": "P8-P31 = Reserved for SAE Assignment",
+        "24": "P8-P31 = Reserved for SAE Assignment",
+        "25": "P8-P31 = Reserved for SAE Assignment",
+        "26": "P8-P31 = Reserved for SAE Assignment",
+        "27": "P8-P31 = Reserved for SAE Assignment",
+        "28": "P8-P31 = Reserved for SAE Assignment",
+        "29": "P8-P31 = Reserved for SAE Assignment",
+        "30": "P8-P31 = Reserved for SAE Assignment",
+        "31": "P32 = Temporary Powertrain Control (Original use of TSC1 Command)"
+      }
+    },
+    {
+      "id": 4191,
+      "name": "Engine Requested Torque (Fractional)",
+      "description": "",
+      "length": "4 bits",
+      "resolution": 0.125,
+      "offset": 0,
+      "data_range": {
+        "min": 0.0,
+        "max": 0.875
+      },
+      "operational_range": "",
+      "units": "%",
+      "source_document": "J1939DA",
+      "bit_length": 4,
+      "encodings": {
+        "0": "0.000 %",
+        "1": "0.125 %",
+        "2": "0.250 %",
+        "3": "0.375 %",
+        "4": "0.500 %",
+        "5": "0.625 %",
+        "6": "0.750 %",
+        "7": "0.875 %",
+        "8-15": "Not available"
+      }
+    },
+    {
+      "id": 4206,
+      "name": "Message Counter",
+      "description": "",
+      "length": "4 bits",
+      "resolution": 1,
+      "offset": 0,
+      "data_range": {
+        "min": 0.0,
+        "max": 15.0
+      },
+      "operational_range": "0 to 7",
+      "units": "count",
+      "source_document": "J1939DA",
+      "bit_length": 4
+    },
+    {
+      "id": 4207,
+      "name": "Message Checksum",
+      "description": "",
+      "length": "4 bits",
+      "resolution": 1,
+      "offset": 0,
+      "data_range": {
+        "min": 0.0,
+        "max": 15.0
+      },
+      "operational_range": "",
+      "units": "count",
+      "source_document": "J1939DA",
+      "bit_length": 4
+    }
+  ],
+  "IndustryGroups": [
+    {
+      "id": 0,
+      "name": "Global, applies to all"
+    },
+    {
+      "id": 1,
+      "name": "On-Highway Equipment"
+    },
+    {
+      "id": 2,
+      "name": "Agricultural and Forestry Equipment"
+    },
+    {
+      "id": 3,
+      "name": "Construction Equipment"
+    },
+    {
+      "id": 4,
+      "name": "Marine"
+    },
+    {
+      "id": 5,
+      "name": "Industrial-Process Control-Stationary (Gen-Sets)"
+    },
+    {
+      "id": 6,
+      "name": "Reserved for future assignment by SAE"
+    },
+    {
+      "id": 7,
+      "name": "Reserved for future assignment by SAE"
+    }
+  ],
+  "SourceAddresses": {
+    "Global": {
+      "0": "Engine #1",
+      "1": "Engine #2",
+      "2": "Turbocharger",
+      "3": "Transmission #1",
+      "4": "Transmission #2"
+    }
+  }
+}

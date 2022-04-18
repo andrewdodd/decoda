@@ -5,6 +5,7 @@ copy-covert-from-pretty_j1939:
 format:
 	black --extend-exclude=submodules src tests setup.py demo.py
 	isort --extend-skip=submodules .
+	python format_json.py extract.json
 
 lint:
 	python -m mypy src tests
