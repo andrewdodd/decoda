@@ -10,20 +10,20 @@ Like most Python libraries, you can install it via Pip:
 
 > pip install decoda
 
-To avoid polluting your system Python, you should probaby to this in a virtualenv, or whatever isolation mechanism you use.
+To avoid polluting your system Python, you should probaby do this in a virtualenv, or whatever isolation mechanism you use.
 
 ## What does the install give me?
 
 The library gives you:
 
-1. A `spec_provider` object that will load a `J1939Spec` object (a collection of repositories) from a JSON spec file (more on this later):
+1. A `spec_provider` object that will load a [`J1939Spec`](https://github.com/andrewdodd/decoda/blob/3132fc8b8ce8dfb2be298bc74e7beb9fae289523/src/decoda/spec_loader.py#L40) object (a collection of repositories) from a JSON spec file (more on this later):
    ```
    from decoda import spec_provider
    
    spec = spec_provider.provide()  # This loads from J1939_SPEC_PATH environment variable or "./decoda_spec.json"
    ```
 
-1. A repository to provide lookup access to Python objects that represent parts of the J1939 specification:
+1. A [`J1939Spec`](https://github.com/andrewdodd/decoda/blob/3132fc8b8ce8dfb2be298bc74e7beb9fae289523/src/decoda/spec_loader.py#L40) object to provide lookup access to Python objects that represent parts of the J1939 specification:
     ```
     from decoda.spec_loader import spec_provider
     
@@ -40,28 +40,30 @@ The library gives you:
 
 1. Utility functions and `PGN` objects that can take an application payload (a `bytearray`) and decode into useful objects:
    ```
-   from decoda import J1939Spec
+   from decoda import spec_provider
     
    spec = spec_provider.provide()
     
    pgn_0 = spec.PGNs.get_by_id(0)
    
    decoded_spns = pgn_0.decode((0x123456789ABCDEF0).to_bytes(8, "big"))
+   decoded_spns[0] # DecodedSPN(id=695, name='Engine Override Control Mode', value='Torque control ...)
+   ...
    ```
 
-1. Some stateful classes that can be used to defragment from a series of frames:
+1. Some stateful classes (found in the `decoda.transport` module) that can be used to defragment messages from a series of frames:
    ```
    from decoda import ConnectionManager, Decoda, spec_provider
    
    def my_decoded_message_handler(message):
        print(f"Do what we want with the message: {message}")
        
-   def me_defrag_error_handler(reason, info):
+   def my_defrag_error_handler(reason, info):
        print(f"Handle the error if we care: {reason} - {info}")
        
    spec = spec_provider.provder()
    decoda = Decoda(spec, my_decoded_message_handler)
-   cm = ConnectionManager(decoda, me_defrag_error_handler)
+   cm = ConnectionManager(decoda, my_defrag_error_handler)
    
    for can_id, payload in ...some stream of received frames...:
        cm.handle_frame(can_id, payload)
@@ -71,18 +73,18 @@ The library gives you:
 
 ## How to use it?
 
-There is a very basic `demo.py` file that comes with this library (but is not bundling into the decoda dependency). It shows:
+There is a very basic `demo.py` file that comes with this library (but it is not bundled into the decoda dependency). It shows:
 
  * How to load the spec into a repository
  * How to obtain spec objects from the repository
  * How to use those objects to decode payload
 
-For example, doing these steps will probably work for you:
+For example, doing these steps will probably work for you and show some example output:
 
 ```
 > pip install decoda   # install the decoda lib
-> curl -O ??? # download the minimal extract spec file
-> curl -O ??? # download the demo.py file
+> curl https://raw.githubusercontent.com/andrewdodd/decoda/main/demo.py > demo.py   # download the minimal extract spec file
+> curl https://raw.githubusercontent.com/andrewdodd/decoda/main/extract.json > decoda_spec.json  # download the demo.py file
 > python ./demo.py
 ```
 
@@ -91,17 +93,13 @@ Beyond this, it is up to you how you use it, but it is probably some extension t
 
 ## But what if I want more than what is in the `extract.json` file?
 
-First, you need to have a valid "spec" file that the library can use. This library distributes a very, very, very minimal version of a spec file that can be used to run the demo file...but that's about it.
-
 The rights to J1939 are held by SAE (and others). I have only included a bare minimum spec file for this reason. The extract is enough to demo a number of major features of the library (variable length PGN handling, conditional behaviour of some SPNs, etc), but only includes a small fraction of the whole SAE spec.
 
-However, the library includes a number of scripts that can convert from the SAE's digital annex XLS file to a useful spec file. The code for these borrows heavliy from the [pretty_j1939](https://github.com/nmfta-repo/pretty_j1939) library, but it has been adjusted to work in a slightly different way.
-
-Also, in order to work seamlessly with this library, there sometimes needs to be manual corrections made to the spec file, as the digital annexes and pretty_j1939 conversion functions have bugs/mistakes.
+However, if you own a copy of the SAE Digital Annex ([link](https://www.sae.org/standards/content/j1939da_202201/)), then this library provides a number of bundled [scripts](https://github.com/andrewdodd/decoda/tree/main/src/decoda/sae_spec_converter) to convert the XLS file to a suitable JSON spec file.  The code for these scripts borrows heavliy from the [pretty_j1939](https://github.com/nmfta-repo/pretty_j1939) library, but it has been adjusted to work in a slightly different way.
 
 When I extract from a digital annex, I generally run all of these following steps (which use the console scripts exported by the Decoda libary, see [setup.py entry_points](https://github.com/andrewdodd/decoda/blob/main/setup.py#L40-L47)):
 
-1. Extract from the XLS just the raw spec data (replacing `PATH_TO_DIGITAL_ANNEX` with the path to the XLS file):  
+1. Extract just the raw spec data from the XLS (replacing `PATH_TO_DIGITAL_ANNEX` with the path to the XLS file):  
 ```
 json_from_digital_annex <PATH_TO_DIGITAL_ANNEX.XLS> ./J1939DA.spec.json --pretty
 ```
@@ -116,6 +114,8 @@ enrich_spec ./J1939DA.spec.json ./J1939DA.enriched.json --pretty
 correct_spec --corrections_path ./<CORRECTIONS FOLDER> ./J1939DA.enriched.json ./J1939DA.corrected.json --pretty
 ```
 
+*NB: sometimes there are manual corrections made that need to be made to the spec file, as the digital annexes and pretty_j1939 conversion functions have bugs/mistakes.*
+
 4. Strip things that we know definitely will not work (items with missing data etc):
 ```
 remove_bad_items ./J1939DA.corrected.json ./J1939DA.cleaned.json --pretty
@@ -128,10 +128,10 @@ cp J1939DA.cleaned.json decoda_spec.json
 
 
 ## FAQ
-Really...no one has asked, but I'm guessing at what they might ask...
+No one has asked these, but I'm guessing at what they might ask...
 
 ### I don't have the SAE digital annex, will this work for me?
-Probably not, as it is a lot of work to create your own spec file. However, it can be done (I did it this way until I found [pretty_j1939](https://github.com/nmfta-repo/pretty_j1939)).
+Probably not, as it is a lot of work to create your own spec file. However, it can be done (I did it by hand until I found [pretty_j1939](https://github.com/nmfta-repo/pretty_j1939)).
 
 ### Does this library talk Controller Area Network (CAN)?
 No, this library is only focussed on converting an application payload that you *know* is encoded in the SAE J1939 standard, and making it more friendly to view and work with (by performing data conversions and returning "objects").
@@ -141,7 +141,7 @@ Yes. There seem to be quite a few in this area. Some are focussed on J1939, and 
 
  * [pretty_j1939](https://github.com/nmfta-repo/pretty_j1939), *"python libs and scripts for pretty-printing J1939 logs"*
    - This library is the one that inspired me to attempt to build the spec files out of the SAE digital annex files. The authors of this library also seem to be much more involved in vehicle networks, CAN and J1939 than I ever have been. The code in this library seems to know much more about the domain of using J1939.
-   - I had already worked on the decoding part well before I saw this library, so I have not adopted their decoding technique.
+   - I had already worked on the decoding part well before I saw this library, so I have not adopted their decoding technique, but overall this seems like a good library.
 
  * [python-j1939](https://github.com/milhead2/python-j1939), *"Breakout of j1939 from inside the python-can package"*
    - This library seems focussed on the J1939 framing and encoding details, and is not so focussed on decoding the application layer data. I think is it used to "talk J1939" by using the `python-can` project to "talk CAN".
@@ -174,7 +174,7 @@ For example, I do this:
 > json_from_isobus_xlsx --pretty "SPNs and PGNs.xlsx" ./corrections/iso-11783.json
 ```
 
-Then when I run the `correct_spec` script, the corrections from this file will be applied.
+Then when I run the `correct_spec` script (step 3 above), the corrections from this file will be applied.
 
 ### How can I supply the spec from a different location?
 By default the library looks for a file called `decoda_spec.json` in the execution path. If you want to supply a different file, you can set the `J1939_SPEC_FILE` environment variable.
