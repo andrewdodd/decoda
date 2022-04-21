@@ -13,10 +13,14 @@ lint:
 test:
 	pytest
 
-all: copy-covert-from-pretty_j1939 format test lint
+all: copy-convert-from-pretty_j1939 format test lint
 
 clean: 
 	rm -rf dist
 
-build: clean all
-	python setup.py sdist
+check_build_deps:
+	@bash check_build_deps.sh
+
+build: check_build_deps clean all
+	rm -rf build dist
+	python -m build .
