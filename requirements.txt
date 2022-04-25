@@ -1,5 +1,7 @@
-attrs
+-e .
 pytest
 black
 isort
 mypy
+build
+twine
