@@ -46,9 +46,13 @@ def conditionally_applies(
         raise ValueError("no values decoded")
 
     try:
-        decoded = next(d for d in already_decoded if d.id == conditional_on_spn_id)
+        decoded = next(
+            d for d in already_decoded if d.id == conditional_on_spn_id
+        )
     except StopIteration:
-        raise ValueError(f"conditional on SPN {conditional_on_spn_id}, but not found")
+        raise ValueError(
+            f"conditional on SPN {conditional_on_spn_id}, but not found"
+        )
 
     if decoded.value != custom_args["applies_if"]:
         return None

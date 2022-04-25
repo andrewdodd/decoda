@@ -10,7 +10,9 @@ def remove_pgns(pgns):
     result = []
     for pgn in pgns:
         spns_list = pgn["spns"]
-        if len(spns_list) > 0 and all(bool(spn.get("start_pos")) for spn in spns_list):
+        if len(spns_list) > 0 and all(
+            bool(spn.get("start_pos")) for spn in spns_list
+        ):
             # we want this, even if it appears to be invalid....we should fix
             # it
             result.append(pgn)

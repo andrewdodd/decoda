@@ -56,7 +56,9 @@ class TestRegularPackedPGNs:
             print("{:<45}: {}".format(d.name, d.display_value))
         # assert False
 
-    def test_it_unpacks_PGN_61444_Electronic_Engine_Controller_1(self, pgn_61444):
+    def test_it_unpacks_PGN_61444_Electronic_Engine_Controller_1(
+        self, pgn_61444
+    ):
         """This is a common PGN"""
         sut = pgn_61444
         assert sut.id == 61444
@@ -183,7 +185,9 @@ class TestPGNsWithVariableText:
 
 
 class TestPGNsWithRepeatableSPNs:
-    def test_it_unpacks_PGN_65226_ActiveDiagnosticTroubleCodes(self, pgn_65226: PGN):
+    def test_it_unpacks_PGN_65226_ActiveDiagnosticTroubleCodes(
+        self, pgn_65226: PGN
+    ):
         sut = pgn_65226
         assert sut.id == 65226
         assert sut.name == "Active Diagnostic Trouble Codes"
@@ -196,14 +200,24 @@ class TestPGNsWithRepeatableSPNs:
         assert decoded[1].value == "Lamp On"
         assert decoded[2].value == "Lamp On"
         assert decoded[3].value == "Lamp On"
-        assert decoded[4].value == "Fast Flash (2 Hz or faster, 50% duty cycle)"
-        assert decoded[5].value == "Fast Flash (2 Hz or faster, 50% duty cycle)"
-        assert decoded[6].value == "Fast Flash (2 Hz or faster, 50% duty cycle)"
-        assert decoded[7].value == "Fast Flash (2 Hz or faster, 50% duty cycle)"
+        assert (
+            decoded[4].value == "Fast Flash (2 Hz or faster, 50% duty cycle)"
+        )
+        assert (
+            decoded[5].value == "Fast Flash (2 Hz or faster, 50% duty cycle)"
+        )
+        assert (
+            decoded[6].value == "Fast Flash (2 Hz or faster, 50% duty cycle)"
+        )
+        assert (
+            decoded[7].value == "Fast Flash (2 Hz or faster, 50% duty cycle)"
+        )
 
         # First SPN
         assert decoded[8].raw == 0x004B8
-        assert decoded[8].value == "SPN 1208 - Engine Oil Filter Intake Pressure"
+        assert (
+            decoded[8].value == "SPN 1208 - Engine Oil Filter Intake Pressure"
+        )
         assert (
             decoded[8].display_value
             == "SPN 1208 - Engine Oil Filter Intake Pressure (1208)"
@@ -215,7 +229,8 @@ class TestPGNsWithRepeatableSPNs:
         assert decoded[9].raw == 16
         assert decoded[10].value == 0
         assert (
-            decoded[11].value == "means convert SPNs per the Version 4 definition below"
+            decoded[11].value
+            == "means convert SPNs per the Version 4 definition below"
         )
 
         # Second SPN
@@ -230,7 +245,8 @@ class TestPGNsWithRepeatableSPNs:
         )
         assert decoded[14].value == 0
         assert (
-            decoded[15].value == "means convert SPNs per the Version 4 definition below"
+            decoded[15].value
+            == "means convert SPNs per the Version 4 definition below"
         )
 
     def test_it_unpacks_PGN_64912_AdvertisedEngineTorqueCurve(self, pgn_64912):
@@ -285,7 +301,9 @@ def test_all_PGNs():
     except FileNotFoundError:
         pytest.skip("Unable to find a spec file")
     spn_specs = spec["SPNs"]
-    spn_specs = [spn for spn in spn_specs if spn.get("bit_length") not in ("", None)]
+    spn_specs = [
+        spn for spn in spn_specs if spn.get("bit_length") not in ("", None)
+    ]
     spns = Repo(SPN, spn_from_dict, spn_specs)
 
     errors = []
@@ -330,5 +348,8 @@ def test_it_can_load_from_a_spec_file():
     except FileNotFoundError:
         pytest.skip("Unable to find a spec file")
     assert spec.Manufacturers.get_by_id(2).name == "Allison Transmission, Inc."
-    assert spec.SPNs.get_by_id(22).name == "Engine Extended Crankcase Blow-by Pressure"
+    assert (
+        spec.SPNs.get_by_id(22).name
+        == "Engine Extended Crankcase Blow-by Pressure"
+    )
     assert spec.PGNs.get_by_id(0).name == "Torque/Speed Control 1"

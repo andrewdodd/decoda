@@ -129,7 +129,9 @@ def make_decoder_from_spn_dict(d):
         return EncodedValue(d["encodings"], bit_length)
     elif str(d.get("units", "")).lower() == "ascii":
         return TextValue(
-            bit_length, delimiter=d.get("delimiter"), length_spn=d.get("length_spn")
+            bit_length,
+            delimiter=d.get("delimiter"),
+            length_spn=d.get("length_spn"),
         )
     elif str(d.get("units", "")).lower() == "bytearray":
         return ByteArrayValue(bit_length)
@@ -186,7 +188,9 @@ def pgn_from_dict(d, spn_ref):
 
 
 def industry_group_from_dict(d, preferred_addresses):
-    return IndustryGroup(d["id"], d["name"], preferred_addresses.get(d["id"], {}))
+    return IndustryGroup(
+        d["id"], d["name"], preferred_addresses.get(d["id"], {})
+    )
 
 
 def convert_addresses(d):
@@ -225,7 +229,9 @@ def load_from_file(filename, warn_of_errors=True):
             pass
 
     pgns = Repo(PGN, pgn_from_dict, pgn_specs, spns)
-    manufacturers = Repo(Manufacturer, manufacturer_from_dict, spec["Manufacturers"])
+    manufacturers = Repo(
+        Manufacturer, manufacturer_from_dict, spec["Manufacturers"]
+    )
     preferred_addresses = convert_addresses(spec["SourceAddresses"])
     industry_groups = Repo(
         IndustryGroup,
@@ -236,10 +242,14 @@ def load_from_file(filename, warn_of_errors=True):
 
     if warn_of_errors:
         if spns_in_error:
-            spn_ids = sorted(list(set(spn.get("id") for spn, _ in spns_in_error)))
+            spn_ids = sorted(
+                list(set(spn.get("id") for spn, _ in spns_in_error))
+            )
             print(f"SPN IDs with errors: {spn_ids}")
         if pgns_in_error:
-            pgn_ids = sorted(list(set(pgn.get("id") for pgn, _ in pgns_in_error)))
+            pgn_ids = sorted(
+                list(set(pgn.get("id") for pgn, _ in pgns_in_error))
+            )
             print(f"PGN IDs with errors: {pgn_ids}")
 
     return J1939Spec(manufacturers, spns, pgns, industry_groups)

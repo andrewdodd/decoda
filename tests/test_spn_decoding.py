@@ -92,9 +92,13 @@ class TestScalarValue:
                 "bit_length": 8,
             }
         )  # yapf: disable
-        result, _ = sv.decode_from_raw(b"\0", "1", False, -1, ignore_range=True)
+        result, _ = sv.decode_from_raw(
+            b"\0", "1", False, -1, ignore_range=True
+        )
         assert result["value"] == -5
-        result, _ = sv.decode_from_raw(b"\x14", "1", False, -1, ignore_range=True)
+        result, _ = sv.decode_from_raw(
+            b"\x14", "1", False, -1, ignore_range=True
+        )
         assert result["value"] == 15
 
     @pytest.mark.parametrize(
@@ -116,9 +120,13 @@ class TestScalarValue:
                 "bit_length": bit_length,
             }
         )
-        result, _ = sut.decode_from_raw(byte_stream, "1", False, -1, ignore_range=True)
+        result, _ = sut.decode_from_raw(
+            byte_stream, "1", False, -1, ignore_range=True
+        )
         assert result["value"] == "Not available"
-        assert result["display_value"] == "Not available" + display_value_suffix
+        assert (
+            result["display_value"] == "Not available" + display_value_suffix
+        )
 
     @pytest.mark.parametrize(
         ["bit_length", "byte_stream", "display_value_suffix"],
@@ -139,9 +147,13 @@ class TestScalarValue:
                 "bit_length": bit_length,
             }
         )
-        result, _ = sut.decode_from_raw(byte_stream, "1", False, -1, ignore_range=True)
+        result, _ = sut.decode_from_raw(
+            byte_stream, "1", False, -1, ignore_range=True
+        )
         assert result["value"] == "Error indicator"
-        assert result["display_value"] == "Error indicator" + display_value_suffix
+        assert (
+            result["display_value"] == "Error indicator" + display_value_suffix
+        )
 
     @pytest.mark.parametrize(
         ["bit_length", "byte_stream", "display_value_suffix"],
@@ -164,7 +176,9 @@ class TestScalarValue:
                 "bit_length": bit_length,
             }
         )
-        result, _ = sut.decode_from_raw(byte_stream, "1", False, -1, ignore_range=True)
+        result, _ = sut.decode_from_raw(
+            byte_stream, "1", False, -1, ignore_range=True
+        )
         assert result["value"] == "Parameter specific indicator"
         assert (
             result["display_value"]
@@ -188,7 +202,11 @@ class TestEncodedValue:
     def test_it_decodes_unknown_encodings_to_something(self):
         ev = EncodedValue({0: "Off", 1: "On"}, BitLength(2))
         result, _ = ev.decode_from_raw(b"\2", "1", False, -1)
-        assert result == {"value": None, "raw": 2, "display_value": "No encoding (2)"}
+        assert result == {
+            "value": None,
+            "raw": 2,
+            "display_value": "No encoding (2)",
+        }
 
     def test_it_raises_error_if_there_are_no_encodings(self):
         with pytest.raises(ValueError) as e:
@@ -217,7 +235,11 @@ class TestEncodedValue:
         )
 
         result, _ = ev.decode_from_raw(b"\0", "1", False, -1)
-        assert result == {"value": "North", "raw": 0, "display_value": "North (0)"}
+        assert result == {
+            "value": "North",
+            "raw": 0,
+            "display_value": "North (0)",
+        }
         result, _ = ev.decode_from_raw(b"\x0a", "1", False, -1)
         assert result == {
             "value": "Agency defined",
@@ -244,19 +266,25 @@ class TestEncodedValue:
 
 class TestBitLength:
     @pytest.mark.parametrize("bit_length", [1, 7, 9])
-    def test_it_cannot_be_constructed_with_non_byte_boundary_length(self, bit_length):
+    def test_it_cannot_be_constructed_with_non_byte_boundary_length(
+        self, bit_length
+    ):
         with pytest.raises(ValueError) as e:
             BitLength(bit_length, True)
-        assert str(e.value) == "bit_length ({}) must be an 8-bit multiple".format(
-            bit_length
-        )
+        assert str(
+            e.value
+        ) == "bit_length ({}) must be an 8-bit multiple".format(bit_length)
 
 
 class TestTextValue:
     def test_it_decodes(self):
         tv = TextValue(BitLength(None, True), "*")
         result, _ = tv.decode_from_raw(bytes("hello", "ascii"), "1", False, -1)
-        assert result == {"value": "hello", "raw": "hello", "display_value": "hello"}
+        assert result == {
+            "value": "hello",
+            "raw": "hello",
+            "display_value": "hello",
+        }
 
     def test_it_raises_error_if_not_variable_and_insufficient_bytes(self):
         tv = TextValue(BitLength(5 * 8))
@@ -273,7 +301,8 @@ class TestTextValue:
             TextValue(BitLength(None, True))
 
         assert (
-            str(e.value) == "Variable length SPN must specify delimiter or length SPN"
+            str(e.value)
+            == "Variable length SPN must specify delimiter or length SPN"
         )
 
     @pytest.mark.parametrize("delimiter", ["0x00", "0x2a", "0xa"])
@@ -285,7 +314,11 @@ class TestTextValue:
             + bytes("world", "ascii")
         )
         result, end_byte_idx = tv.decode_from_raw(inp, "1", False, -1)
-        assert result == {"value": "hello", "raw": "hello", "display_value": "hello"}
+        assert result == {
+            "value": "hello",
+            "raw": "hello",
+            "display_value": "hello",
+        }
         assert end_byte_idx == 5
 
     @pytest.mark.parametrize(
@@ -360,7 +393,9 @@ class TestSPNDecoding:
         assert result == DecodedSPN.build(spn, "hello", "hello", "hello")
 
     def test_it_raises_an_error_if_value_does_not_have_enough_bits(self):
-        spn = SPN(1, "Name", "Desc", scalar_value_from_dict({"bit_length": 16}))
+        spn = SPN(
+            1, "Name", "Desc", scalar_value_from_dict({"bit_length": 16})
+        )
 
         with pytest.raises(ValueError) as e:
             spn.decode(bytes([0]), "1", False, -1)
@@ -438,10 +473,14 @@ class TestSPNConstruction:
         assert spn.name == "A name of an SPN"
         assert spn.description == ""
         assert spn.value_decoder == TextValue.return_value
-        TextValue.assert_called_with(BitLength(200), delimiter=None, length_spn=None)
+        TextValue.assert_called_with(
+            BitLength(200), delimiter=None, length_spn=None
+        )
 
     @patch("decoda.spec_loader.TextValue")
-    def test_it_builds_a_text_decoding_spn_with_variable_length(self, TextValue):
+    def test_it_builds_a_text_decoding_spn_with_variable_length(
+        self, TextValue
+    ):
         spn = spn_from_dict(
             {
                 "id": 4254,

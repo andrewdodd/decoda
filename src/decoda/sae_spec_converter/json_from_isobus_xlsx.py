@@ -36,7 +36,9 @@ def main():
     args = parser.parse_args()
 
     print(args.isobus_pgns_spns_xlsx)
-    wb = secure_open_workbook(filename=args.isobus_pgns_spns_xlsx, on_demand=True)
+    wb = secure_open_workbook(
+        filename=args.isobus_pgns_spns_xlsx, on_demand=True
+    )
     spec = spec_from_workbook(wb)
     json.dump(spec, args.json_file, indent=2 if args.pretty else None)
 

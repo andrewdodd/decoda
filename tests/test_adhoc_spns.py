@@ -81,7 +81,8 @@ def test_tractor_limit_statuses(spn, spec):
     assert decoded.value == "Not limited"
     decoded, _ = sut.decode(b"\x03", "1", False, -1)
     assert (
-        decoded.value == "Limited low (only higher command values result in a change)"
+        decoded.value
+        == "Limited low (only higher command values result in a change)"
     )
 
 

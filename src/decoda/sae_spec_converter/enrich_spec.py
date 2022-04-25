@@ -129,12 +129,16 @@ def extract_encodings(d):
         def update(self, d):
             for key, val in d.items():
                 update_dict = (
-                    self.encodings if key not in self.encodings else self.extras
+                    self.encodings
+                    if key not in self.encodings
+                    else self.extras
                 )
                 update_dict[key] = val
 
     take_first = OnlyTakeFirst()
-    J1939daConverter.create_bit_object_from_description(d["description"], take_first)
+    J1939daConverter.create_bit_object_from_description(
+        d["description"], take_first
+    )
 
     if not take_first.encodings:
         return d

@@ -25,7 +25,9 @@ def test_embeddeduse_peer_to_peer_example(spec: J1939Spec):
 
     spn_val = decoded[0]
 
-    assert spn_val.value == bytes([0x02, 0x03, 0x02, 0x91, 0x03, 0x00, 0x00, 0x00])
+    assert spn_val.value == bytes(
+        [0x02, 0x03, 0x02, 0x91, 0x03, 0x00, 0x00, 0x00]
+    )
     assert spn_val.display_value == payload
 
 

@@ -15,5 +15,6 @@ def main():
     for line in output:
         sys.stdout.write(line)
 
+
 if __name__ == "__main__":
     main()

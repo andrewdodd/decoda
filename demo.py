@@ -54,7 +54,9 @@ def demo_industry_groups(repo):
         ig = ig_repo.get_by_id(id)
         print(f"{ig.id}: {ig.description}")
         for address in [0, 1, 239, 240, 251]:
-            print(f" - Address: {address} = {repo.preferred_address_name(address, id)}")
+            print(
+                f" - Address: {address} = {repo.preferred_address_name(address, id)}"
+            )
 
 
 def print_decoding_for_payload(payload, pgn):

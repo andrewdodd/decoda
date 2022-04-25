@@ -44,7 +44,9 @@ def main():
     spec["Manufacturers"] = []
     spec["SourceAddresses"] = {
         "Global": {
-            k: v for k, v in spec["SourceAddresses"]["Global"].items() if int(k) < 5
+            k: v
+            for k, v in spec["SourceAddresses"]["Global"].items()
+            if int(k) < 5
         }
     }
     json.dump(spec, args.output_file, indent=2 if args.pretty else None)

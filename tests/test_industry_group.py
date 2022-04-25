@@ -51,7 +51,9 @@ def test_it_returns_broadcast_address_for_neg_one(spec):
     assert spec.preferred_address_name(-1, 1) == "Broadcast address"
 
 
-def test_it_falls_back_to_global_address_if_not_specified_in_insdustry_group(spec):
+def test_it_falls_back_to_global_address_if_not_specified_in_insdustry_group(
+    spec,
+):
     assert spec.preferred_address_name(251, 1) == "On-Board Data Logger"
     assert spec.preferred_address_name(251, 2) == "On-Board Data Logger"
     assert spec.preferred_address_name(251, 3) == "On-Board Data Logger"

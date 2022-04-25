@@ -39,7 +39,9 @@ class Decoda:
     def __init__(self, spec, callback=None, error_handler=None):
         self.__spec__ = spec
         self._callback = callback if callback else lambda x: print(x)
-        self._handle_error = error_handler if error_handler else lambda x: print(x)
+        self._handle_error = (
+            error_handler if error_handler else lambda x: print(x)
+        )
 
     def get_callback(self):
         return self._callback
@@ -116,7 +118,9 @@ class ConnectionManager:
         next_packet_number = next(
             value for value in message.decoded if value.id == 2562
         ).value
-        pgn = next(value for value in message.decoded if value.id == 2563).value
+        pgn = next(
+            value for value in message.decoded if value.id == 2563
+        ).value
         self._active_defrags[to_from_pair] = {
             "pgn": pgn,
             "packet_count": packet_count,
@@ -132,14 +136,18 @@ class ConnectionManager:
             return
 
         pair_state = self._active_defrags[to_from_pair]
-        seq_no = next(value for value in message.decoded if value.id == 2572).value
+        seq_no = next(
+            value for value in message.decoded if value.id == 2572
+        ).value
 
         if seq_no != pair_state["next_packet_number"]:
             self._handle_error("fragment received out of order", message)
             return
 
         pair_state["next_packet_number"] = seq_no + 1
-        fragment = next(value for value in message.decoded if value.id == 2573).value
+        fragment = next(
+            value for value in message.decoded if value.id == 2573
+        ).value
         pair_state["fragments"].append(fragment)
 
         if pair_state["next_packet_number"] > pair_state["packet_count"]:

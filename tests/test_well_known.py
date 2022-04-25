@@ -16,7 +16,8 @@ def test_refers_to_spn():
     try:
         assert refers_to_spn(0) == "SPN 0"
         assert (
-            refers_to_spn(22) == "SPN 22 - Engine Extended Crankcase Blow-by Pressure"
+            refers_to_spn(22)
+            == "SPN 22 - Engine Extended Crankcase Blow-by Pressure"
         )
     except FileNotFoundError:
         pytest.skip("Unable to find a spec file")
@@ -64,7 +65,9 @@ class TestConditionallyApplies:
         )
         assert value is None
 
-    def test_it_returns_value_from_non_custom_alternative_if_matches_applies_if(self):
+    def test_it_returns_value_from_non_custom_alternative_if_matches_applies_if(
+        self,
+    ):
         non_custom_alternative = Mock()
         non_custom_alternative.decode_from_raw.return_value = [
             {"value": "the return value"}
@@ -72,7 +75,10 @@ class TestConditionallyApplies:
         value = conditionally_applies(
             0x00,
             already_decoded=[Mock(id=9999, value="decoded value")],
-            custom_args={"conditional_on_spn": 9999, "applies_if": "decoded value"},
+            custom_args={
+                "conditional_on_spn": 9999,
+                "applies_if": "decoded value",
+            },
             non_custom_alternative=non_custom_alternative,
         )
         assert value == "the return value"

@@ -26,9 +26,15 @@ class BitLength:
     variable = attr.ib(default=False)
 
     def __attrs_post_init__(self):
-        if self.variable and self.max_len is not None and self.max_len % 8 != 0:
+        if (
+            self.variable
+            and self.max_len is not None
+            and self.max_len % 8 != 0
+        ):
             raise ValueError(
-                "bit_length ({}) must be an 8-bit multiple".format(self.max_len)
+                "bit_length ({}) must be an 8-bit multiple".format(
+                    self.max_len
+                )
             )
 
     def could_fit_in_bytes(self, value):
@@ -97,7 +103,9 @@ class EncodedValue:
         self, value, start_spec, variable_pgn, prev_spn_ended, *args, **kwargs
     ):
         bit_len = self.bit_length.expected_length(variable_pgn)
-        raw, end_byte_idx = extract_value_at_location(value, start_spec, bit_len)
+        raw, end_byte_idx = extract_value_at_location(
+            value, start_spec, bit_len
+        )
         value = self.encodings.get(raw)
         if value:
             display_value = "{} ({})".format(value, raw)
@@ -152,7 +160,9 @@ class ScalarValue:
             return
 
         if raw >= not_available_thres:
-            raise NotAvaiableRangeError(format_offset(raw, not_available_thres))
+            raise NotAvaiableRangeError(
+                format_offset(raw, not_available_thres)
+            )
         if raw >= error_ind_thres:
             raise ErrorIndicatorRangeError(format_offset(raw, error_ind_thres))
         if raw >= param_specific_thres:
@@ -170,7 +180,9 @@ class ScalarValue:
         **kwargs,
     ):
         bit_len = self.bit_length.expected_length(variable_pgn)
-        raw, end_byte_idx = extract_value_at_location(value, start_spec, bit_len)
+        raw, end_byte_idx = extract_value_at_location(
+            value, start_spec, bit_len
+        )
 
         try:
             self.check_in_valid_range(raw)
@@ -186,13 +198,19 @@ class ScalarValue:
 
             if not ignore_range:
                 if self.min and value < self.min:
-                    display_value = "{} (encoded value {} was clipped to min)".format(
-                        self.as_display_value(self.min), self.as_display_value(value)
+                    display_value = (
+                        "{} (encoded value {} was clipped to min)".format(
+                            self.as_display_value(self.min),
+                            self.as_display_value(value),
+                        )
                     )
                     value = self.min
                 if self.max and value > self.max:
-                    display_value = "{} (encoded value {} was clipped to max)".format(
-                        self.as_display_value(self.max), self.as_display_value(value)
+                    display_value = (
+                        "{} (encoded value {} was clipped to max)".format(
+                            self.as_display_value(self.max),
+                            self.as_display_value(value),
+                        )
                     )
                     value = self.max
 
@@ -232,7 +250,9 @@ class TextValue:
             and self.delimiter is None
             and self.length_spn is None
         ):
-            raise ValueError("Variable length SPN must specify delimiter or length SPN")
+            raise ValueError(
+                "Variable length SPN must specify delimiter or length SPN"
+            )
 
     def decode_from_raw(
         self,
@@ -303,7 +323,11 @@ class ByteArrayValue:
         val = value[start_idx:]
         end_byte_idx = start_idx + len(val)
 
-        return {"raw": val, "value": val, "display_value": val.hex()}, end_byte_idx
+        return {
+            "raw": val,
+            "value": val,
+            "display_value": val.hex(),
+        }, end_byte_idx
 
 
 @attr.s(frozen=True)
@@ -324,7 +348,9 @@ class CustomFunctionValue:
         **kwargs,
     ):
         bit_len = self.bit_length.expected_length(variable_pgn)
-        raw, end_byte_idx = extract_value_at_location(value, start_spec, bit_len)
+        raw, end_byte_idx = extract_value_at_location(
+            value, start_spec, bit_len
+        )
 
         val = self.custom(
             value=raw,
@@ -358,10 +384,21 @@ class SPN(SPNFields):
     value_decoder = attr.ib()
 
     def decode(
-        self, value, start_spec, variable_pgn, prev_spn_ended_idx, *args, **kwargs
+        self,
+        value,
+        start_spec,
+        variable_pgn,
+        prev_spn_ended_idx,
+        *args,
+        **kwargs,
     ):
         decoded, end_byte_idx = self.value_decoder.decode_from_raw(
-            value, start_spec, variable_pgn, prev_spn_ended_idx, *args, **kwargs
+            value,
+            start_spec,
+            variable_pgn,
+            prev_spn_ended_idx,
+            *args,
+            **kwargs,
         )
         if decoded is None:
             return None, prev_spn_ended_idx
@@ -376,7 +413,11 @@ class DecodedSPN(SPNFields):
 
     @classmethod
     def build(
-        cls, spn: SPN, raw: Number, value: Union[Number, str], display_value: str
+        cls,
+        spn: SPN,
+        raw: Number,
+        value: Union[Number, str],
+        display_value: str,
     ):
         return cls(
             id=spn.id,
@@ -471,7 +512,9 @@ def extract_value_at_location(payload, location, bit_length):
         contiguous_length = 8
         if "-" in contiguous:
             # we have a multi byte contiguous section
-            contiguous_start, contiguous_end = (int(x) for x in contiguous.split("-"))
+            contiguous_start, contiguous_end = (
+                int(x) for x in contiguous.split("-")
+            )
             contiguous_length = (1 + contiguous_end - contiguous_start) * 8
         elif "." in contiguous:
             # It appears to be a new spec?

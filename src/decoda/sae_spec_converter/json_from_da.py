@@ -30,7 +30,9 @@ def get_header_row(sheet):
     row_num = 3 if sheet.row_values(0)[3].strip() == "" else 0
 
     header_row = sheet.row_values(row_num)
-    normalised_headers = [header.upper().replace(" ", "_") for header in header_row]
+    normalised_headers = [
+        header.upper().replace(" ", "_") for header in header_row
+    ]
     return normalised_headers, row_num
 
 
@@ -103,13 +105,21 @@ def extract_spns(wb):
     description_col = get_header_index_any_match(
         headers, ["SPN_DESCRIPTION", "SP_DESCRIPTION"]
     )
-    length_col = get_header_index_any_match(headers, ["SPN_LENGTH", "SP_LENGTH"])
-    resolution_col = get_header_index_any_match(headers, ["RESOLUTION", "SCALING"])
+    length_col = get_header_index_any_match(
+        headers, ["SPN_LENGTH", "SP_LENGTH"]
+    )
+    resolution_col = get_header_index_any_match(
+        headers, ["RESOLUTION", "SCALING"]
+    )
     offset_col = get_header_index_any_match(headers, "OFFSET")
     data_range_col = get_header_index_any_match(headers, "DATA_RANGE")
-    operational_range_col = get_header_index_any_match(headers, "OPERATIONAL_RANGE")
+    operational_range_col = get_header_index_any_match(
+        headers, "OPERATIONAL_RANGE"
+    )
     units_col = get_header_index_any_match(headers, ["UNITS", "UNIT"])
-    document_col = get_header_index_any_match(headers, ["SPN_DOCUMENT", "SP_DOCUMENT"])
+    document_col = get_header_index_any_match(
+        headers, ["SPN_DOCUMENT", "SP_DOCUMENT"]
+    )
 
     result = []
     for i in range(row_num + 1, sheet.nrows):
@@ -151,7 +161,9 @@ def extract_pgns(wb):
     name_col = get_header_index_any_match(
         headers, ["PARAMETER_GROUP_LABEL", "PG_LABEL"]
     )
-    acronym_col = get_header_index_any_match(headers, ["ACRONYM", "PG_ACRONYM"])
+    acronym_col = get_header_index_any_match(
+        headers, ["ACRONYM", "PG_ACRONYM"]
+    )
     description_col = get_header_index_any_match(
         headers, ["PGN_DESCRIPTION", "PG_DESCRIPTION"]
     )
@@ -164,7 +176,9 @@ def extract_pgns(wb):
     spn_position_col = get_header_index_any_match(
         headers, ["SPN_POSITION_IN_PGN", "SP_POSITION_IN_PG"]
     )
-    document_col = get_header_index_any_match(headers, ["PGN_DOCUMENT", "PG_DOCUMENT"])
+    document_col = get_header_index_any_match(
+        headers, ["PGN_DOCUMENT", "PG_DOCUMENT"]
+    )
 
     result = []
     current_pgn = {"id": "bogus"}
@@ -205,7 +219,9 @@ def extract_industry_groups(wb):
     headers, row_num = get_header_row(sheet)
 
     id_col = get_header_index_any_match(headers, "INDUSTRY_GROUP_ID")
-    name_col = get_header_index_any_match(headers, "INDUSTRY_GROUP_DESCRIPTION")
+    name_col = get_header_index_any_match(
+        headers, "INDUSTRY_GROUP_DESCRIPTION"
+    )
 
     result = []
     for i in range(row_num + 1, sheet.nrows):

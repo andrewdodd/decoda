@@ -51,7 +51,9 @@ class J1939daConverter:
         self.j1939db = OrderedDict()
         self.digital_annex_xls_list = list(
             map(
-                lambda da: self.secure_open_workbook(filename=da, on_demand=True),
+                lambda da: self.secure_open_workbook(
+                    filename=da, on_demand=True
+                ),
                 digital_annex_xls_list,
             )
         )
@@ -68,7 +70,10 @@ class J1939daConverter:
     def get_pgn_data_len(contents):
         if type(contents) is float:
             return str(int(contents))
-        elif "bytes" not in contents.lower() and "variable" not in contents.lower():
+        elif (
+            "bytes" not in contents.lower()
+            and "variable" not in contents.lower()
+        ):
             return str(contents)
         elif "bytes" in contents.lower():
             return str(int(contents.split(" ")[0]) * 8)
@@ -112,7 +117,9 @@ class J1939daConverter:
 
     @staticmethod
     def just_numeric_expr(contents):
-        contents = re.sub(r"[^0-9\.\-/]", "", contents)  # remove all but number and '.'
+        contents = re.sub(
+            r"[^0-9\.\-/]", "", contents
+        )  # remove all but number and '.'
         contents = re.sub(
             r"[/-]+[ ]*$", "", contents
         )  # remove trailing '/' or '-' that are sometimes left
@@ -121,7 +128,9 @@ class J1939daConverter:
     @staticmethod
     def get_spn_units(contents, raw_spn_resolution):
         norm_contents = unidecode.unidecode(contents).lower().strip()
-        raw_spn_resolution = unidecode.unidecode(raw_spn_resolution).lower().strip()
+        raw_spn_resolution = (
+            unidecode.unidecode(raw_spn_resolution).lower().strip()
+        )
         if norm_contents == "":
             if "states" in raw_spn_resolution:
                 norm_contents = "bit"
@@ -221,7 +230,9 @@ class J1939daConverter:
                 return lo * 1000, hi * 1000
             else:
                 return lo, hi
-        raise ValueError('unknown operational range from "%s","%s"' % (contents, units))
+        raise ValueError(
+            'unknown operational range from "%s","%s"' % (contents, units)
+        )
 
     @staticmethod
     # return a list of int of the start bits ([some_bit_pos] or [some_bit_pos,some_other_bit_pos]) of the SPN; or [
@@ -254,7 +265,9 @@ class J1939daConverter:
         if any(re.match(r"^[a-z]\+[0-9]", first) for first in firsts):
             return [-1]
 
-        firsts = [J1939daConverter.just_numeric_expr(first) for first in firsts]
+        firsts = [
+            J1939daConverter.just_numeric_expr(first) for first in firsts
+        ]
         if any(first.strip() == "" for first in firsts):
             return [-1]
 
@@ -331,7 +344,9 @@ class J1939daConverter:
         match = re.match(ENUM_RANGE_LINE_RE, line)
         if match:
             groups = match.groups()
-            if re.match(r"[01b]", groups[0]) and not re.match(r"[01b]", groups[2]):
+            if re.match(r"[01b]", groups[0]) and not re.match(
+                r"[01b]", groups[2]
+            ):
                 return None
             return groups[0], groups[2]
         else:
@@ -400,7 +415,10 @@ class J1939daConverter:
 
     @staticmethod
     def is_spn_likely_bitmapped(spn_description):
-        return len(J1939daConverter.get_enum_lines(spn_description.splitlines())) > 2
+        return (
+            len(J1939daConverter.get_enum_lines(spn_description.splitlines()))
+            > 2
+        )
 
     def process_spns_and_pgns_tab(self, sheet):
         self.j1939db.update({"J1939PGNdb": OrderedDict()})
@@ -416,7 +434,9 @@ class J1939daConverter:
         header_row, header_row_num = self.get_header_row(sheet)
         pgn_col = self.get_any_header_column(header_row, "PGN")
         spn_col = self.get_any_header_column(header_row, "SPN")
-        acronym_col = self.get_any_header_column(header_row, ["ACRONYM", "PG_ACRONYM"])
+        acronym_col = self.get_any_header_column(
+            header_row, ["ACRONYM", "PG_ACRONYM"]
+        )
         pgn_label_col = self.get_any_header_column(
             header_row, ["PARAMETER_GROUP_LABEL", "PG_LABEL"]
         )
@@ -429,7 +449,9 @@ class J1939daConverter:
         spn_position_in_pgn_col = self.get_any_header_column(
             header_row, ["SPN_POSITION_IN_PGN", "SP_POSITION_IN_PG"]
         )
-        spn_name_col = self.get_any_header_column(header_row, ["SPN_NAME", "SP_LABEL"])
+        spn_name_col = self.get_any_header_column(
+            header_row, ["SPN_NAME", "SP_LABEL"]
+        )
         offset_col = self.get_any_header_column(header_row, "OFFSET")
         data_range_col = self.get_any_header_column(header_row, "DATA_RANGE")
         resolution_col = self.get_any_header_column(
@@ -464,8 +486,12 @@ class J1939daConverter:
 
                 pgn_data_len = self.get_pgn_data_len(row[pgn_data_length_col])
 
-                pgn_object.update({"Label": unidecode.unidecode(row[acronym_col])})
-                pgn_object.update({"Name": unidecode.unidecode(row[pgn_label_col])})
+                pgn_object.update(
+                    {"Label": unidecode.unidecode(row[acronym_col])}
+                )
+                pgn_object.update(
+                    {"Name": unidecode.unidecode(row[pgn_label_col])}
+                )
                 pgn_object.update({"PGNLength": pgn_data_len})
                 pgn_object.update(
                     {"Rate": unidecode.unidecode(row[transmission_rate_col])}
@@ -499,18 +525,26 @@ class J1939daConverter:
                 spn_object = OrderedDict()
 
                 spn_length = self.get_spn_len(row[spn_length_col])
-                if type(spn_length) == str and spn_length.startswith("Variable"):
+                if type(spn_length) == str and spn_length.startswith(
+                    "Variable"
+                ):
                     spn_delimiter = self.get_spn_delimiter(row[spn_length_col])
                 else:
                     spn_delimiter = None
 
                 spn_resolution = self.get_spn_resolution(row[resolution_col])
-                spn_units = self.get_spn_units(row[units_col], row[resolution_col])
+                spn_units = self.get_spn_units(
+                    row[units_col], row[resolution_col]
+                )
                 data_range = unidecode.unidecode(row[data_range_col])
-                low, high = self.get_operational_hilo(data_range, spn_units, spn_length)
+                low, high = self.get_operational_hilo(
+                    data_range, spn_units, spn_length
+                )
 
                 spn_name = unidecode.unidecode(row[spn_name_col])
-                operational_range = unidecode.unidecode(row[operational_range_col])
+                operational_range = unidecode.unidecode(
+                    row[operational_range_col]
+                )
                 spn_offset = self.get_spn_offset(row[offset_col])
 
                 spn_object.update({"DataRange": data_range})
@@ -522,7 +556,9 @@ class J1939daConverter:
                 spn_object.update({"Resolution": spn_resolution})
                 spn_object.update({"SPNLength": spn_length})
                 if spn_delimiter is not None:
-                    spn_object.update({"Delimiter": "0x%s" % spn_delimiter.hex()})
+                    spn_object.update(
+                        {"Delimiter": "0x%s" % spn_delimiter.hex()}
+                    )
                 spn_object.update({"Units": spn_units})
 
                 existing_spn = j1939_spn_db.get(str(int(spn)))
@@ -539,21 +575,27 @@ class J1939daConverter:
                 # this SPN
                 try:
                     spn_position_contents = row[spn_position_in_pgn_col]
-                    spn_startbit_inpgn = self.get_spn_start_bit(spn_position_contents)
+                    spn_startbit_inpgn = self.get_spn_start_bit(
+                        spn_position_contents
+                    )
                     if (
-                        spn_label == "5998" and spn_position_contents.strip() == "4.4"
+                        spn_label == "5998"
+                        and spn_position_contents.strip() == "4.4"
                     ):  # bug in 201311 DA
                         spn_startbit_inpgn = self.get_spn_start_bit("4.5")
                     elif (
-                        spn_label == "3036" and spn_position_contents.strip() == "6-8.6"
+                        spn_label == "3036"
+                        and spn_position_contents.strip() == "6-8.6"
                     ):  # bug in 201311 DA
                         spn_startbit_inpgn = self.get_spn_start_bit("6-7,8.6")
                     elif (
-                        spn_label == "6062" and spn_position_contents.strip() == "4.4"
+                        spn_label == "6062"
+                        and spn_position_contents.strip() == "4.4"
                     ):  # bug in 201311 DA
                         spn_startbit_inpgn = self.get_spn_start_bit("4.5")
                     elif (
-                        spn_label == "6030" and spn_position_contents.strip() == "4.4"
+                        spn_label == "6030"
+                        and spn_position_contents.strip() == "4.4"
                     ):  # bug in 201311 DA
                         spn_startbit_inpgn = self.get_spn_start_bit("4.5")
 
@@ -587,7 +629,9 @@ class J1939daConverter:
                     spn_description
                 ):
                     bit_object = OrderedDict()
-                    self.create_bit_object_from_description(spn_description, bit_object)
+                    self.create_bit_object_from_description(
+                        spn_description, bit_object
+                    )
                     if len(bit_object) > 0:
                         j1939_bit_decodings.update({spn_label: bit_object})
 
@@ -655,7 +699,9 @@ class J1939daConverter:
             spn_startbit_list = pgn_object.get("SPNStartBits")
             spn_order_list = pgn_object.get("Temp_SPN_Order")
 
-            spn_in_pgn_list = list(zip(spn_list, spn_startbit_list, spn_order_list))
+            spn_in_pgn_list = list(
+                zip(spn_list, spn_startbit_list, spn_order_list)
+            )
             if J1939daConverter.all_spns_positioned(spn_startbit_list):
                 for i in range(0, len(spn_in_pgn_list) - 1):
                     here_startbit = int(spn_in_pgn_list[i][1][0])
@@ -673,7 +719,9 @@ class J1939daConverter:
                     else:
                         spn_obj = j1939_spn_db.get(str(here_spn))
                         current_spn_length = spn_obj.get("SPNLength")
-                        if J1939daConverter.is_length_variable(current_spn_length):
+                        if J1939daConverter.is_length_variable(
+                            current_spn_length
+                        ):
                             spn_obj.update({"SPNLength": calced_spn_length})
                             modified_spns.update({here_spn: True})
                         elif (
@@ -705,14 +753,19 @@ class J1939daConverter:
                 spn_startbit_list = pgn_object.get("SPNStartBits")
                 spn_order_list = pgn_object.get("Temp_SPN_Order")
 
-                spn_in_pgn_list = list(zip(spn_list, spn_startbit_list, spn_order_list))
+                spn_in_pgn_list = list(
+                    zip(spn_list, spn_startbit_list, spn_order_list)
+                )
                 for i in range(0, len(spn_in_pgn_list)):
                     here_startbit = int(spn_in_pgn_list[i][1][0])
                     prev_spn = spn_in_pgn_list[i - 1][0]
                     prev_spn_obj = j1939_spn_db.get(str(prev_spn))
                     prev_spn_len = prev_spn_obj.get("SPNLength")
-                    if here_startbit == -1 and not J1939daConverter.is_length_variable(
-                        prev_spn_len
+                    if (
+                        here_startbit == -1
+                        and not J1939daConverter.is_length_variable(
+                            prev_spn_len
+                        )
                     ):
                         if (i - 1) == 0:  # special case for the first field
                             prev_startbit = 0
@@ -729,10 +782,18 @@ class J1939daConverter:
 
                 # update the maps
                 pgn_object.update(
-                    {"SPNs": list(map(operator.itemgetter(0), spn_in_pgn_list))}
+                    {
+                        "SPNs": list(
+                            map(operator.itemgetter(0), spn_in_pgn_list)
+                        )
+                    }
                 )
                 pgn_object.update(
-                    {"SPNStartBits": list(map(operator.itemgetter(1), spn_in_pgn_list))}
+                    {
+                        "SPNStartBits": list(
+                            map(operator.itemgetter(1), spn_in_pgn_list)
+                        )
+                    }
                 )
                 pgn_object.update(
                     {
@@ -751,7 +812,9 @@ class J1939daConverter:
                 spn_startbit_list = pgn_object.get("SPNStartBits")
                 spn_order_list = pgn_object.get("Temp_SPN_Order")
 
-                spn_in_pgn_list = zip(spn_list, spn_startbit_list, spn_order_list)
+                spn_in_pgn_list = zip(
+                    spn_list, spn_startbit_list, spn_order_list
+                )
 
                 def should_remove(tup):
                     spn = tup[0]
@@ -778,10 +841,18 @@ class J1939daConverter:
 
                 # update the maps
                 pgn_object.update(
-                    {"SPNs": list(map(operator.itemgetter(0), spn_in_pgn_list))}
+                    {
+                        "SPNs": list(
+                            map(operator.itemgetter(0), spn_in_pgn_list)
+                        )
+                    }
                 )
                 pgn_object.update(
-                    {"SPNStartBits": list(map(operator.itemgetter(1), spn_in_pgn_list))}
+                    {
+                        "SPNStartBits": list(
+                            map(operator.itemgetter(1), spn_in_pgn_list)
+                        )
+                    }
                 )
                 pgn_object.update(
                     {
@@ -801,7 +872,8 @@ class J1939daConverter:
             spn_in_pgn_list = zip(spn_list, spn_startbit_list, spn_order_list)
             # sort numbers then letters
             spn_in_pgn_list = sorted(
-                spn_in_pgn_list, key=lambda obj: (isinstance(obj[2], str), obj[2])
+                spn_in_pgn_list,
+                key=lambda obj: (isinstance(obj[2], str), obj[2]),
             )
 
             # update the maps (now sorted by 'Temp_SPN_Order')
@@ -809,10 +881,18 @@ class J1939daConverter:
                 {"SPNs": list(map(operator.itemgetter(0), spn_in_pgn_list))}
             )
             pgn_object.update(
-                {"SPNStartBits": list(map(operator.itemgetter(1), spn_in_pgn_list))}
+                {
+                    "SPNStartBits": list(
+                        map(operator.itemgetter(1), spn_in_pgn_list)
+                    )
+                }
             )
             pgn_object.update(
-                {"Temp_SPN_Order": list(map(operator.itemgetter(2), spn_in_pgn_list))}
+                {
+                    "Temp_SPN_Order": list(
+                        map(operator.itemgetter(2), spn_in_pgn_list)
+                    )
+                }
             )
 
     @staticmethod
@@ -821,7 +901,8 @@ class J1939daConverter:
             return True
         else:
             is_positioned = map(
-                lambda spn_startbit: int(spn_startbit[0]) != -1, spn_startbit_list
+                lambda spn_startbit: int(spn_startbit[0]) != -1,
+                spn_startbit_list,
             )
             return functools.reduce(lambda a, b: a and b, is_positioned)
 
@@ -861,7 +942,9 @@ class J1939daConverter:
     def convert(self, output_file):
         self.j1939db = OrderedDict()
         sheet_name = ["SPNs & PGNs", "SPs & PGs"]
-        self.process_spns_and_pgns_tab(self.find_first_sheet_by_name(sheet_name))
+        self.process_spns_and_pgns_tab(
+            self.find_first_sheet_by_name(sheet_name)
+        )
         sheet_name = "Global Source Addresses (B2)"
         self.process_any_source_addresses_sheet(
             self.find_first_sheet_by_name(sheet_name)
