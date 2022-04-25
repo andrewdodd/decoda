@@ -2,7 +2,7 @@ from .main import *
 from .spec_loader import *
 from .transport import *
 
-__version__ = "0.1.0.dev0"
+__version__ = "0.1.0"
 
 __title__ = "decoda"
 __description__ = "Decoder for J1939"
