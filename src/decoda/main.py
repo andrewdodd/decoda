@@ -6,10 +6,14 @@ from typing import Any, Dict, Optional, Union
 
 import attr
 
-from decoda.exceptions import (CouldBeAnyLength, ErrorIndicatorRangeError,
-                               NotAvaiableRangeError,
-                               ParameterSpecificIndicatorError,
-                               UnknownReferenceError, UnsupportedLocationSpec)
+from decoda.exceptions import (
+    CouldBeAnyLength,
+    ErrorIndicatorRangeError,
+    NotAvaiableRangeError,
+    ParameterSpecificIndicatorError,
+    UnknownReferenceError,
+    UnsupportedLocationSpec,
+)
 
 
 @attr.s(frozen=True)

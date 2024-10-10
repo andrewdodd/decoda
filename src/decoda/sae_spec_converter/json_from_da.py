@@ -8,32 +8,38 @@ import xlrd2 as xlrd
 from defusedxml.common import EntitiesForbidden
 
 
-def secure_open_workbook(**kwargs):
+class XlrdAdapter:
+    def __init__(self, wb):
+        self._wb = wb
+
+    def find_first_sheet_by_name(self, sheet_names):
+        if not isinstance(sheet_names, list):
+            sheet_names = [sheet_names]
+        for sheet_name in sheet_names:
+            if sheet_name in self._wb.sheet_names():
+                sheet = self._wb.sheet_by_name(sheet_name)
+                return sheet
+        return None
+
+    def get_header_row(self, sheet):
+        row_num = 3 if sheet.row_values(0)[3].strip() == "" else 0
+
+        header_row = sheet.row_values(row_num)
+        normalised_headers = [
+            header.upper().replace(" ", "_") for header in header_row
+        ]
+        return normalised_headers, row_num
+
+    def get_datemode(self):
+        return self._wb.datemode
+
+
+def secure_open_workbook(filename, **kwargs):
     defusedxml.defuse_stdlib()
     try:
-        return xlrd.open_workbook(**kwargs)
+        return XlrdAdapter(xlrd.open_workbook(filename=filename, **kwargs))
     except EntitiesForbidden:
         raise ValueError("Please use an excel file without XEE")
-
-
-def find_first_sheet_by_name(book, sheet_names):
-    if not isinstance(sheet_names, list):
-        sheet_names = [sheet_names]
-    for sheet_name in sheet_names:
-        if sheet_name in book.sheet_names():
-            sheet = book.sheet_by_name(sheet_name)
-            return sheet
-    return None
-
-
-def get_header_row(sheet):
-    row_num = 3 if sheet.row_values(0)[3].strip() == "" else 0
-
-    header_row = sheet.row_values(row_num)
-    normalised_headers = [
-        header.upper().replace(" ", "_") for header in header_row
-    ]
-    return normalised_headers, row_num
 
 
 def get_header_index_any_match(headers, names):
@@ -64,9 +70,9 @@ def dedup_and_flag_discrepancies(items, key="id"):
 
 
 def extract_manfacturers(wb):
-    sheet = find_first_sheet_by_name(wb, ["Manufacturer IDs (B10)"])
+    sheet = wb.find_first_sheet_by_name(["Manufacturer IDs (B10)"])
 
-    headers, row_num = get_header_row(sheet)
+    headers, row_num = wb.get_header_row(sheet)
     id_col = get_header_index_any_match(headers, "MFR_ID")
     name_col = get_header_index_any_match(headers, "MANUFACTURER")
     location_col = get_header_index_any_match(headers, "LOCATION")
@@ -81,7 +87,7 @@ def extract_manfacturers(wb):
 
         if not isinstance(last_modified, str):
             last_modified = datetime.datetime(
-                *xlrd.xldate_as_tuple(last_modified, wb.datemode)
+                *xlrd.xldate_as_tuple(last_modified, wb.get_datemode())
             )
             last_modified = last_modified.date().isoformat()
 
@@ -97,8 +103,8 @@ def extract_manfacturers(wb):
 
 
 def extract_spns(wb):
-    sheet = find_first_sheet_by_name(wb, ["SPNs & PGNs", "SPs & PGs"])
-    headers, row_num = get_header_row(sheet)
+    sheet = wb.find_first_sheet_by_name(["SPNs & PGNs", "SPs & PGs"])
+    headers, row_num = wb.get_header_row(sheet)
 
     id_col = get_header_index_any_match(headers, "SPN")
     name_col = get_header_index_any_match(headers, ["SPN_NAME", "SP_LABEL"])
@@ -154,8 +160,8 @@ def int_or_str(s):
 
 
 def extract_pgns(wb):
-    sheet = find_first_sheet_by_name(wb, ["SPNs & PGNs", "SPs & PGs"])
-    headers, row_num = get_header_row(sheet)
+    sheet = wb.find_first_sheet_by_name(["SPNs & PGNs", "SPs & PGs"])
+    headers, row_num = wb.get_header_row(sheet)
 
     id_col = get_header_index_any_match(headers, "PGN")
     name_col = get_header_index_any_match(
@@ -215,8 +221,8 @@ def extract_pgns(wb):
 
 
 def extract_industry_groups(wb):
-    sheet = find_first_sheet_by_name(wb, ["Industry Groups (B1)"])
-    headers, row_num = get_header_row(sheet)
+    sheet = wb.find_first_sheet_by_name(["Industry Groups (B1)"])
+    headers, row_num = wb.get_header_row(sheet)
 
     id_col = get_header_index_any_match(headers, "INDUSTRY_GROUP_ID")
     name_col = get_header_index_any_match(
@@ -247,8 +253,8 @@ def extract_source_addresses(wb):
         ("IG5", ["IG5 Source Addresses (B7)"]),
     ]:
 
-        sheet = find_first_sheet_by_name(wb, sheet_names)
-        headers, row_num = get_header_row(sheet)
+        sheet = wb.find_first_sheet_by_name(sheet_names)
+        headers, row_num = wb.get_header_row(sheet)
 
         id_col = get_header_index_any_match(headers, "SOURCE_ADDRESS_ID")
         name_col = get_header_index_any_match(headers, ["NAME", "FUNCTION"])

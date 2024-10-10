@@ -10,9 +10,19 @@ from typing import Callable, Dict, Generic, List, Type, TypeVar
 import attr
 
 from decoda.exceptions import MissingBitLength, UnknownReferenceError
-from decoda.main import (PGN, SPN, BitLength, ByteArrayValue,
-                         CustomFunctionValue, EncodedValue, IndustryGroup,
-                         Manufacturer, OrderingRecord, ScalarValue, TextValue)
+from decoda.main import (
+    PGN,
+    SPN,
+    BitLength,
+    ByteArrayValue,
+    CustomFunctionValue,
+    EncodedValue,
+    IndustryGroup,
+    Manufacturer,
+    OrderingRecord,
+    ScalarValue,
+    TextValue,
+)
 
 T = TypeVar("T", covariant=True)
 
