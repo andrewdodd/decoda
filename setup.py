@@ -36,6 +36,7 @@ INSTALL_REQUIRES = [
     # the copied create_j1939db_json.py file works)
     "pretty_j1939",
     "xlrd2",
+    "pandas",
 ]
 # I'm not really sure what this is for
 EXTRAS_REQUIRE = {}
