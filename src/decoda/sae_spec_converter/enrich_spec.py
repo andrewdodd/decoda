@@ -13,11 +13,25 @@ def update_resolution(d):
     units = d.get("units", "").lower()
     if not resolution:
         return d
-    if resolution in {"variant determined"}:
+    if resolution in {"variant determined", "ascii"}:
         return d
     if units in {"ascii", "binary", "bit", "bit-mapped"}:
         return d
 
+    if d.get("length", "").endswith(" bits"):
+        return d
+
+    # Try using "per" for splitting, this appears to be the new way
+    parts = resolution.split(f"{units} per ")
+    try:
+        d["resolution"] = eval(parts[0].replace(" ", ""))
+        return d
+    except Exception:
+        if units == "" and "/" not in resolution:
+            return d
+        pass
+
+    # Fall-back to old mappings
     # map known mismatches
     # NB: units are lower case from above!
     units = {
@@ -36,8 +50,8 @@ def update_resolution(d):
 
     parts = resolution.split(units)
     try:
-        d["resolution"] = eval(parts[0])
-    except SyntaxError:
+        d["resolution"] = eval(parts[0].replace(" ", ""))
+    except Exception:
         print(d)
         raise
 
@@ -46,7 +60,12 @@ def update_resolution(d):
 
 def update_offset(d):
     d = d.copy()
-    if d["offset"] not in {"", "Variant", "Variant Determined"}:
+    if d["offset"] not in {
+        "",
+        "Variant",
+        "Variant Determined",
+        "Data Specific",
+    }:
         try:
             d["offset"] = eval(d["offset"].split()[0])
         except:
@@ -69,8 +88,8 @@ def update_datarange(d):
             low, high = data_range.split(" to ")
             high = high.split(" ")[0]
             d["data_range"] = {
-                "min": float(low.replace(",", "")),
-                "max": float(high.replace(",", "")),
+                "min": float(low.replace(",", "").replace(" ", "")),
+                "max": float(high.replace(",", "").replace(" ", "")),
             }
     except:
         print(d)
@@ -102,7 +121,7 @@ def append_bitlength(d):
         if parts[-1] == "delimiter":
             d["delimiter"] = hex(ord("*")) if "*" in parts[-2] else hex(0)
         length_spn = re.search(
-            "The length.*must be reported using SPN (\d+) ", d["description"]
+            "The length.*must be reported using SPN (\\d+) ", d["description"]
         )
         if length_spn:
             d["length_spn"] = int(length_spn.group(1))
@@ -136,9 +155,13 @@ def extract_encodings(d):
                 update_dict[key] = val
 
     take_first = OnlyTakeFirst()
-    J1939daConverter.create_bit_object_from_description(
-        d["description"], take_first
-    )
+    try:
+        J1939daConverter.create_bit_object_from_description(
+            d["description"], take_first
+        )
+    except Exception:
+        print(d)
+        raise
 
     if not take_first.encodings:
         return d
@@ -149,6 +172,9 @@ def extract_encodings(d):
     # Apply the same replacement treatments
     description = re.sub(r"[ ]+", " ", description)
     description = re.sub(r"[ ]?\-\-[ ]?", " = ", description)
+    description = re.sub(
+        r"(\d+)\s*-\s*(?!\=)", r"\1 = ", description
+    )  # replace hyphen with = when in form "123 - "
     description_lower = description.lower()
     encodings = {}
     for key, value in take_first.encodings.items():

@@ -6,6 +6,7 @@ import sys
 import defusedxml
 import xlrd2 as xlrd
 from defusedxml.common import EntitiesForbidden
+import pandas as pd
 
 
 class XlrdAdapter:
@@ -30,11 +31,69 @@ class XlrdAdapter:
         ]
         return normalised_headers, row_num
 
-    def get_datemode(self):
-        return self._wb.datemode
+    def convert_to_datetime(self, value):
+        return datetime.datetime(
+            *xlrd.xldate_as_tuple(value, self._wb.datemode)
+        )
+
+    def number_rows(self, sheet):
+        return sheet.nrows
+
+    def row_values(self, sheet, row_index):
+        return sheet.row_values(row_index)
+
+
+class PandasAdapter:
+    def __init__(self, filename):
+        self._filename = filename
+
+    @staticmethod
+    def create(filename, **kwargs):
+        return PandasAdapter(filename)
+
+    def find_first_sheet_by_name(self, sheet_names):
+        if not isinstance(sheet_names, list):
+            sheet_names = [sheet_names]
+        for sheet_name in sheet_names:
+            try:
+                df = pd.read_excel(
+                    self._filename,
+                    sheet_name=sheet_name,
+                    index_col=None,
+                    header=None,
+                )
+                df = df.where(pd.notnull(df), "")
+                # Replace occurrences of _x000D_ with an empty string (i.e. pandas' version of \r
+                df = df.replace("_x000D_", "", regex=True)
+                return df
+            except Exception:
+                pass
+        return None
+
+    def get_header_row(self, sheet):
+        indicator_cell_value = sheet.values[0, 3]
+        row_num = 0 if indicator_cell_value else 3
+
+        header_row = sheet.values[row_num]
+        normalised_headers = [
+            (header or "").upper().replace(" ", "_") for header in header_row
+        ]
+        return normalised_headers, row_num
+
+    def convert_to_datetime(self, value):
+        return value
+
+    def number_rows(self, sheet):
+        return len(sheet)
+
+    def row_values(self, sheet, row_index):
+        return sheet.iloc[row_index]
 
 
 def secure_open_workbook(filename, **kwargs):
+    if filename.lower().endswith("xlsx"):
+        return PandasAdapter.create(filename, read_only=True)
+
     defusedxml.defuse_stdlib()
     try:
         return XlrdAdapter(xlrd.open_workbook(filename=filename, **kwargs))
@@ -81,14 +140,14 @@ def extract_manfacturers(wb):
     )
 
     result = []
-    for i in range(row_num + 1, sheet.nrows):
-        row = sheet.row_values(i)
+    for i in range(row_num + 1, wb.number_rows(sheet)):
+        row = wb.row_values(sheet, i)
         last_modified = row[last_modified_col]
 
         if not isinstance(last_modified, str):
-            last_modified = datetime.datetime(
-                *xlrd.xldate_as_tuple(last_modified, wb.get_datemode())
-            )
+            last_modified = wb.convert_to_datetime(last_modified)
+
+        if last_modified:
             last_modified = last_modified.date().isoformat()
 
         result.append(
@@ -128,10 +187,10 @@ def extract_spns(wb):
     )
 
     result = []
-    for i in range(row_num + 1, sheet.nrows):
-        row = sheet.row_values(i)
+    for i in range(row_num + 1, wb.number_rows(sheet)):
+        row = wb.row_values(sheet, i)
         spn_id = row[id_col]
-        if spn_id == "":
+        if spn_id == "" or spn_id is None:
             continue
 
         result.append(
@@ -174,7 +233,8 @@ def extract_pgns(wb):
         headers, ["PGN_DESCRIPTION", "PG_DESCRIPTION"]
     )
     length_col = get_header_index_any_match(
-        headers, ["PGN_DATA_LENGTH", "PG_DATA_LENGTH"]
+        headers,
+        ["PGN_DATA_LENGTH", "PG_DATA_LENGTH", "PG_DATA_MINIMUM_LENGTH"],
     )
     rate_col = get_header_index_any_match(headers, "TRANSMISSION_RATE")
 
@@ -188,10 +248,10 @@ def extract_pgns(wb):
 
     result = []
     current_pgn = {"id": "bogus"}
-    for i in range(row_num + 1, sheet.nrows):
-        row = sheet.row_values(i)
+    for i in range(row_num + 1, wb.number_rows(sheet)):
+        row = wb.row_values(sheet, i)
         pgn_id = row[id_col]
-        if pgn_id == "":
+        if pgn_id == "" or pgn_id is None:
             continue
 
         pgn_id = int(pgn_id)
@@ -210,7 +270,7 @@ def extract_pgns(wb):
             result.append(current_pgn)
 
         # Only append SPNs that are valid
-        spn_id = row[spn_id_col]
+        spn_id = row[spn_id_col] or ""
         if spn_id != "":
             # TODO - check for consistency?
             current_pgn["spns"].append(
@@ -230,8 +290,8 @@ def extract_industry_groups(wb):
     )
 
     result = []
-    for i in range(row_num + 1, sheet.nrows):
-        row = sheet.row_values(i)
+    for i in range(row_num + 1, wb.number_rows(sheet)):
+        row = wb.row_values(sheet, i)
         result.append(
             {
                 "id": int(row[id_col]),
@@ -260,8 +320,8 @@ def extract_source_addresses(wb):
         name_col = get_header_index_any_match(headers, ["NAME", "FUNCTION"])
 
         addresses = {}
-        for i in range(row_num + 1, sheet.nrows):
-            row = sheet.row_values(i)
+        for i in range(row_num + 1, wb.number_rows(sheet)):
+            row = wb.row_values(sheet, i)
             id_val = int(row[id_col])
             name_val = str(row[name_col])
 

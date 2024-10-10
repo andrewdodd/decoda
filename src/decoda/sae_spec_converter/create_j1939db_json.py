@@ -382,6 +382,9 @@ class J1939daConverter:
         is_binary = J1939daConverter.is_enum_lines_binary(enum_lines)
 
         for line in enum_lines:
+            line = re.sub(
+                r"(\d+)\s*-\s*(?!\=)", r"\1 = ", line
+            )  # replace hyphen with = when in form "123 - "
             enum_description = J1939daConverter.get_enum_line_description(line)
 
             range_boundaries = J1939daConverter.get_enum_line_range(line)
