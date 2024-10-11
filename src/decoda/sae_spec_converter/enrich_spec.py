@@ -18,9 +18,6 @@ def update_resolution(d):
     if units in {"ascii", "binary", "bit", "bit-mapped"}:
         return d
 
-    if d.get("length", "").endswith(" bits"):
-        return d
-
     # Try using "per" for splitting, this appears to be the new way
     parts = resolution.split(f"{units} per ")
     try:
@@ -173,7 +170,7 @@ def extract_encodings(d):
     description = re.sub(r"[ ]+", " ", description)
     description = re.sub(r"[ ]?\-\-[ ]?", " = ", description)
     description = re.sub(
-        r"(\d+)\s*-\s*(?!\=)", r"\1 = ", description
+        r"^(\d+)\s*-\s*(?!\=)", r"\1 = ", description
     )  # replace hyphen with = when in form "123 - "
     description_lower = description.lower()
     encodings = {}

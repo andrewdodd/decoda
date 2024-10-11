@@ -383,7 +383,7 @@ class J1939daConverter:
 
         for line in enum_lines:
             line = re.sub(
-                r"(\d+)\s*-\s*(?!\=)", r"\1 = ", line
+                r"^(\d+)\s*-\s*(?!\=)", r"\1 = ", line
             )  # replace hyphen with = when in form "123 - "
             enum_description = J1939daConverter.get_enum_line_description(line)
 
