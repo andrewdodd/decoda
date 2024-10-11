@@ -77,13 +77,13 @@ def update_datarange(d):
         if d["units"] == "ASCII":
             pass
         elif " to " in d["data_range"]:
-            # if d['id'] == 1255:
-            # import pdb; pdb.set_trace()
             data_range = d["data_range"]
             if d["units"]:
                 data_range = data_range.split(d["units"])[0].strip()
             low, high = data_range.split(" to ")
-            high = high.split(" ")[0]
+            # Remove all characters that are not likely to be part of a number
+            low = re.sub(r"[^\d\.\-]", "", low)
+            high = re.sub(r"[^\d\.\-]", "", high)
             d["data_range"] = {
                 "min": float(low.replace(",", "").replace(" ", "")),
                 "max": float(high.replace(",", "").replace(" ", "")),

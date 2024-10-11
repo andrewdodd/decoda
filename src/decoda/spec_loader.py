@@ -137,7 +137,11 @@ def make_decoder_from_spn_dict(d):
 
     if d.get("encodings"):
         return EncodedValue(d["encodings"], bit_length)
-    elif str(d.get("units", "")).lower() == "ascii":
+    elif (
+        str(d.get("units", "")).lower() == "ascii"
+        or d.get("delimiter", "")
+        or d.get("length_spn")
+    ):
         return TextValue(
             bit_length,
             delimiter=d.get("delimiter"),
