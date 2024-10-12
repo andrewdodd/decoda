@@ -55,6 +55,11 @@ def update_resolution(d):
     return d
 
 
+# Remove all characters that are not likely to be part of a number
+def _strip_not_likely_numericals(value):
+    return re.sub(r"[^\d\.\-]", "", value)
+
+
 def update_offset(d):
     d = d.copy()
     if d["offset"] not in {
@@ -64,7 +69,8 @@ def update_offset(d):
         "Data Specific",
     }:
         try:
-            d["offset"] = eval(d["offset"].split()[0])
+            offset = _strip_not_likely_numericals(d["offset"])
+            d["offset"] = eval(offset.split()[0])
         except:
             print(d)
             raise
@@ -82,8 +88,8 @@ def update_datarange(d):
                 data_range = data_range.split(d["units"])[0].strip()
             low, high = data_range.split(" to ")
             # Remove all characters that are not likely to be part of a number
-            low = re.sub(r"[^\d\.\-]", "", low)
-            high = re.sub(r"[^\d\.\-]", "", high)
+            low = _strip_not_likely_numericals(low)
+            high = _strip_not_likely_numericals(high)
             d["data_range"] = {
                 "min": float(low.replace(",", "").replace(" ", "")),
                 "max": float(high.replace(",", "").replace(" ", "")),
