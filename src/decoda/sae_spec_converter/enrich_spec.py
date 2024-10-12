@@ -57,6 +57,9 @@ def update_resolution(d):
 
 # Remove all characters that are not likely to be part of a number
 def _strip_not_likely_numericals(value):
+    # Strip hyphens not followed by digit, like in "Watt-hour"
+    value = re.sub(r"-(?!\d)", "", value)
+    # Strip everything not likely to be part of a number
     return re.sub(r"[^\d\.\-]", "", value)
 
 

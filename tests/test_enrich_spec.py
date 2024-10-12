@@ -1,6 +1,9 @@
 import pytest
 
-from decoda.sae_spec_converter.enrich_spec import update_datarange
+from decoda.sae_spec_converter.enrich_spec import (
+    update_datarange,
+    update_offset,
+)
 
 
 @pytest.mark.parametrize(
@@ -24,3 +27,17 @@ def test_update_datarange_converts_as_expected(units, data_range, expected):
         ]
         == expected
     )
+
+
+@pytest.mark.parametrize(
+    ["offset", "expected"],
+    [
+        ("", ""),
+        ("-1234", -1234),
+        ("-1 234", -1234),
+        ("-1,234 mm", -1234),
+        ("0 Watt-hour", 0),
+    ],
+)
+def test_it_updates_offet(offset, expected):
+    assert update_offset({"offset": offset})["offset"] == expected
