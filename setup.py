@@ -37,6 +37,7 @@ INSTALL_REQUIRES = [
     "pretty_j1939",
     "xlrd2",
     "pandas",
+    "openpyxl", # Needed by pandas to read XLSX files
 ]
 # I'm not really sure what this is for
 EXTRAS_REQUIRE = {}

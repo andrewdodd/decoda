@@ -66,6 +66,8 @@ class PandasAdapter:
                 # Replace occurrences of _x000D_ with an empty string (i.e. pandas' version of \r
                 df = df.replace("_x000D_", "", regex=True)
                 return df
+            except ImportError:
+                raise
             except Exception:
                 pass
         return None
