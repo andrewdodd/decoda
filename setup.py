@@ -31,16 +31,18 @@ CLASSIFIERS = [
 ]
 INSTALL_REQUIRES = [
     "attrs",
-    # Installing pretty_j1939 instead of its dependencies, even
-    # though we don't really use it directly (i.e. is it here just so
-    # the copied create_j1939db_json.py file works)
-    "pretty_j1939",
-    "xlrd2",
-    "pandas",
-    "openpyxl", # Needed by pandas to read XLSX files
 ]
-# I'm not really sure what this is for
-EXTRAS_REQUIRE = {}
+EXTRAS_REQUIRE = {
+    "sae_spec_converter": [
+        # Installing pretty_j1939 instead of its dependencies, even
+        # though we don't really use it directly (i.e. is it here just so
+        # the copied create_j1939db_json.py file works)
+        "pretty_j1939",
+        "xlrd2",
+        "pandas",
+        "openpyxl", # Needed by pandas to read XLSX files
+    ]
+}
 
 ###############################################################################
 
@@ -102,11 +104,11 @@ if __name__ == "__main__":
         options={"bdist_wheel": {"universal": "1"}},
         entry_points={
             "console_scripts": [
-                "json_from_digital_annex=decoda.sae_spec_converter.json_from_da:main",
-                "json_from_isobus_xlsx=decoda.sae_spec_converter.json_from_isobus_xlsx:main",
-                "enrich_spec=decoda.sae_spec_converter.enrich_spec:main",
-                "correct_spec=decoda.sae_spec_converter.correct_spec:main",
-                "remove_bad_items=decoda.sae_spec_converter.remove_bad_items:main",
+                "json_from_digital_annex=decoda.sae_spec_converter.json_from_da:main [sae_spec_converter]",
+                "json_from_isobus_xlsx=decoda.sae_spec_converter.json_from_isobus_xlsx:main [sae_spec_converter]",
+                "enrich_spec=decoda.sae_spec_converter.enrich_spec:main [sae_spec_converter]",
+                "correct_spec=decoda.sae_spec_converter.correct_spec:main [sae_spec_converter]",
+                "remove_bad_items=decoda.sae_spec_converter.remove_bad_items:main [sae_spec_converter]",
             ]
         },
     )
