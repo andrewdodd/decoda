@@ -97,7 +97,14 @@ The rights to J1939 are held by SAE (and others). I have only included a bare mi
 
 However, if you own a copy of the SAE Digital Annex ([link](https://www.sae.org/standards/content/j1939da_202201/)), then this library provides a number of bundled [scripts](https://github.com/andrewdodd/decoda/tree/main/src/decoda/sae_spec_converter) to convert the XLS file to a suitable JSON spec file.  The code for these scripts borrows heavliy from the [pretty_j1939](https://github.com/nmfta-repo/pretty_j1939) library, but it has been adjusted to work in a slightly different way.
 
+To use these scripts you will need to install Decoda with the extras necessary (i.e. this pulls in more dependencies that you don't need for decoding, only for creating a spec file):
+
+```
+pip install 'decoda[sae_spec_converter]'
+```
+
 When I extract from a digital annex, I generally run all of these following steps (which use the console scripts exported by the Decoda libary, see [setup.py entry_points](https://github.com/andrewdodd/decoda/blob/main/setup.py#L40-L47)):
+
 
 1. Extract just the raw spec data from the XLS (replacing `PATH_TO_DIGITAL_ANNEX` with the path to the XLS file):  
 ```
@@ -161,6 +168,14 @@ I think so, but hey, I wrote it. I think it does some things well, such as:
    - The `demo.py` file shows the use of SPN 2556 to control how the other SPNs in PGN 60416 should be interpreted.
  - Defining a machine and human readable specification structure for the J1939 application data (i.e. the JSON spec format).
  - Providing tools/scripts to bootstrap from the SAE (and isobus) digital annex to get a workable spec file.
+
+### I'm seeing `ImportError` when running the Digital Annex conversion scripts?
+
+You have probably installed just the `decoda` library, and not the additional dependencies it needs. Installing the dependencies, or doing this should fix it:
+
+```
+pip install 'decoda[sae_spec_converter]'
+```
 
 ## Extra stuff
 
