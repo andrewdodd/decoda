@@ -65,3 +65,60 @@ def conditionally_applies(
         **kwargs,
     )
     return alternative_value[0]["value"]
+
+
+def fmi_ce(value, *args, **kwargs):
+    if not 0 <= value <= 31:
+        raise ValueError("Only 5-bit value allowed")
+    # yapf:disable
+    return [
+        "Data Valid But Above Normal Operational Range - Most Severe Level",  # 0
+        "Data Valid But Below Normal Operational Range - Most Severe Level",  # 1
+        "Data Erratic, Intermittent Or Incorrect",  # 2
+        "Voltage Above Normal, Or Shorted To High Source",  # 3
+        "Voltage Below Normal, Or Shorted To Low Source",  # 4
+        "Current Below Normal Or Open Circuit",  # 5
+        "Current Above Normal Or Grounded Circuit",  # 6
+        "Mechanical System Not Responding Or Out Of Adjustment",  # 7
+        "Abnormal Frequency Or Pulse Width Or Period",  # 8
+        "Abnormal Update Rate",  # 9
+        "Abnormal Rate Of Change",  # 10
+        "Root Cause Not Known",  # 11
+        "Bad Intelligent Device Or Component",  # 12
+        "Out Of Calibration",  # 13
+        "Special Instructions",  # 14
+        "Data Valid But Above Normal Operating Range - Least Severe Level",  # 15
+        "Data Valid But Above Normal Operating Range - Moderately Severe Level",  # 16
+        "Data Valid But Below Normal Operating Range - Least Severe Level",  # 17
+        "Data Valid But Below Normal Operating Range - Moderately Severe Level",  # 18
+        "Received Network Data In Error",  # 19
+        "Data Drifted High",  # 20
+        "Data Drifted Low",  # 21
+        "Reserved For SAE Assignment",  # 22
+        "Reserved For SAE Assignment",  # 23
+        "Reserved For SAE Assignment",  # 24
+        "Reserved For SAE Assignment",  # 25
+        "Reserved For SAE Assignment",  # 26
+        "Reserved For SAE Assignment",  # 27
+        "Reserved For SAE Assignment",  # 28
+        "Reserved For SAE Assignment",  # 29
+        "Reserved For SAE Assignment",  # 30
+        "Condition Exists",  # 31
+    ][value]
+    # yapf:enable
+
+
+def fmi_na(value, *args, **kwargs):
+    if value == 31:
+        return "Not available" # Casing similar to other not available encodings
+    return fmi_ce(value, *args, **kwargs)
+
+
+def fmi_zero(value, *args, **kwargs):
+    if not 0 <= value <= 31:
+        raise ValueError("Only 5-bit value allowed")
+    # Some FMIs seemt to define 0 as "no problem". It is not clear what the other encodings should be.
+    return "No fault active" if value == 0 else "Fault present"
+
+
+fmi = fmi_ce  # By default use te condition exists variant

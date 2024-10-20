@@ -195,6 +195,23 @@ def extract_encodings(d):
     return d
 
 
+def update_well_known(d):
+    d = d.copy()
+    if d["name"] == "Fault Mode Indicator":
+        d["custom"] = "decoda.well_known.fmi_ce"
+
+    if d["name"].endswith(" FMI"):
+        desc = d.get("description", "")
+        if re.match(r"parameter (will|shall) be set to 0", desc):
+            d["custom"] = "decoda.well_known.fmi_zero"
+        elif "31 is sent to indicate that no failure" in desc:
+            d["custom"] = "decoda.well_known.fmi_na"
+        else:
+            d["custom"] = "decoda.well_known.fmi_ce"
+
+    return d
+
+
 def enrich_spns(spns):
     result = []
     for spn in spns:
@@ -203,6 +220,7 @@ def enrich_spns(spns):
         spn = update_datarange(spn)
         spn = append_bitlength(spn)
         spn = extract_encodings(spn)
+        spn = update_well_known(spn)
         result.append(spn)
     return result
 

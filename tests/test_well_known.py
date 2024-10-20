@@ -82,3 +82,66 @@ class TestConditionallyApplies:
             non_custom_alternative=non_custom_alternative,
         )
         assert value == "the return value"
+
+
+def test_fmi():
+    # yapf:disable
+    assert (
+        fmi(0)
+        == "Data Valid But Above Normal Operational Range - Most Severe Level"
+    )
+    assert (
+        fmi(1)
+        == "Data Valid But Below Normal Operational Range - Most Severe Level"
+    )
+    assert fmi(2) == "Data Erratic, Intermittent Or Incorrect"
+    assert fmi(3) == "Voltage Above Normal, Or Shorted To High Source"
+    assert fmi(4) == "Voltage Below Normal, Or Shorted To Low Source"
+    assert fmi(5) == "Current Below Normal Or Open Circuit"
+    assert fmi(6) == "Current Above Normal Or Grounded Circuit"
+    assert fmi(7) == "Mechanical System Not Responding Or Out Of Adjustment"
+    assert fmi(8) == "Abnormal Frequency Or Pulse Width Or Period"
+    assert fmi(9) == "Abnormal Update Rate"
+    assert fmi(10) == "Abnormal Rate Of Change"
+    assert fmi(12) == "Bad Intelligent Device Or Component"
+    assert fmi(13) == "Out Of Calibration"
+    assert fmi(14) == "Special Instructions"
+    assert (
+        fmi(15)
+        == "Data Valid But Above Normal Operating Range - Least Severe Level"
+    )
+    assert (
+        fmi(16)
+        == "Data Valid But Above Normal Operating Range - Moderately Severe Level"
+    )
+    assert (
+        fmi(17)
+        == "Data Valid But Below Normal Operating Range - Least Severe Level"
+    )
+    assert (
+        fmi(18)
+        == "Data Valid But Below Normal Operating Range - Moderately Severe Level"
+    )
+    assert fmi(19) == "Received Network Data In Error"
+    assert fmi(20) == "Data Drifted High"
+    assert fmi(21) == "Data Drifted Low"
+    assert fmi(22) == "Reserved For SAE Assignment"
+    assert fmi(30) == "Reserved For SAE Assignment"
+    assert fmi(31) == "Condition Exists"
+    # yapf:enable
+    with pytest.raises(ValueError) as e:
+        fmi(32)
+    assert str(e.value) == "Only 5-bit value allowed"
+    with pytest.raises(ValueError) as e:
+        fmi(-1)
+    assert str(e.value) == "Only 5-bit value allowed"
+
+
+def test_fmi_not_available_variant():
+    assert fmi_na(31) == "Not available"
+
+
+def test_fmi_zero_variant():
+    assert fmi_zero(0) == "No fault active"
+    assert fmi_zero(1) == "Fault present"
+    assert fmi_zero(31) == "Fault present"

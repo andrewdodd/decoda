@@ -3,6 +3,7 @@ import pytest
 from decoda.sae_spec_converter.enrich_spec import (
     update_datarange,
     update_offset,
+    update_well_known,
 )
 
 
@@ -41,3 +42,41 @@ def test_update_datarange_converts_as_expected(units, data_range, expected):
 )
 def test_it_updates_offet(offset, expected):
     assert update_offset({"offset": offset})["offset"] == expected
+
+
+@pytest.mark.parametrize(
+    ["name", "description", "expected_well_known"],
+    [
+        ("Fault Mode Indicator", "", "decoda.well_known.fmi_ce"),
+        ("Anything FMI", "", "decoda.well_known.fmi_ce"),
+        (
+            "Anything FMI",
+            "A value of 31 is sent to indicate that no failure has been detected or this parameter is not supported",
+            "decoda.well_known.fmi_na",
+        ),  # 3222
+        (
+            "Anything FMI",
+            "31 is sent to indicate that no failure",
+            "decoda.well_known.fmi_na",
+        ),  # 3222
+        (
+            "Anything FMI",
+            "parameter will be set to 0",
+            "decoda.well_known.fmi_zero",
+        ),  # 23566
+        (
+            "Anything FMI",
+            "parameter shall be set to 0",
+            "decoda.well_known.fmi_zero",
+        ),  # 23387,
+    ],
+)
+def test_it_updates_well_known_fmi_function(
+    name, description, expected_well_known
+):
+    assert (
+        update_well_known({"name": name, "description": description}).get(
+            "custom"
+        )
+        == expected_well_known
+    )
