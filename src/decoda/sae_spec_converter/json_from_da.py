@@ -258,19 +258,23 @@ def extract_pgns(wb):
 
         pgn_id = int(pgn_id)
         if pgn_id != current_pgn["id"]:
-            # new record found
-            current_pgn = {
-                "id": pgn_id,
-                "name": str(row[name_col]),
-                "acronym": str(row[acronym_col]),
-                "description": str(row[description_col]),
-                "length": int_or_str(row[length_col]),
-                "rate": str(row[rate_col]),
-                "source_document": str(row[document_col]),
-                "spns": [],
-            }
-            result.append(current_pgn)
-
+            # only create a new record if this PGN hasn't been encountered previously
+            result_idx = next((i for i, item in enumerate(result) if item.get('id') == pgn_id), -1)
+            if (result_idx >= 0):
+                current_pgn = result[result_idx]
+            else:
+                current_pgn = {
+                    "id": pgn_id,
+                    "name": str(row[name_col]),
+                    "acronym": str(row[acronym_col]),
+                    "description": str(row[description_col]),
+                    "length": int_or_str(row[length_col]),
+                    "rate": str(row[rate_col]),
+                    "source_document": str(row[document_col]),
+                    "spns": [],
+                }
+                result.append(current_pgn)
+        
         # Only append SPNs that are valid
         spn_id = row[spn_id_col] or ""
         if spn_id != "":
