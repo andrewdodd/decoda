@@ -114,7 +114,7 @@ def get_header_index_any_match(headers, names):
     raise ValueError(f"Unabled to find column named one of: {names}")
 
 
-def dedup_and_flag_discrepancies(items, key="id"):
+def dedup_and_flag_discrepancies(items, key="id", print_suffix=""):
     by_key = {}
     identical_dups = 0
     for item in items:
@@ -126,7 +126,7 @@ def dedup_and_flag_discrepancies(items, key="id"):
                 identical_dups += 1
         else:
             by_key[k] = item
-    print(f"Removed {identical_dups} identical duplicates")
+    print(f"Removed {identical_dups} identical duplicates{print_suffix}")
     return [by_key[k] for k in sorted(by_key.keys())]
 
 
@@ -210,7 +210,7 @@ def extract_spns(wb):
             }
         )
 
-    return dedup_and_flag_discrepancies(result)
+    return dedup_and_flag_discrepancies(result, print_suffix=" for SPNs")
 
 
 def int_or_str(s):
@@ -248,8 +248,7 @@ def extract_pgns(wb):
         headers, ["PGN_DOCUMENT", "PG_DOCUMENT"]
     )
 
-    result = []
-    current_pgn = {"id": "bogus"}
+    result = {}
     for i in range(row_num + 1, wb.number_rows(sheet)):
         row = wb.row_values(sheet, i)
         pgn_id = row[id_col]
@@ -257,9 +256,9 @@ def extract_pgns(wb):
             continue
 
         pgn_id = int(pgn_id)
-        if pgn_id != current_pgn["id"]:
-            # new record found
-            current_pgn = {
+        current_pgn = result.get(
+            pgn_id,
+            {
                 "id": pgn_id,
                 "name": str(row[name_col]),
                 "acronym": str(row[acronym_col]),
@@ -268,8 +267,9 @@ def extract_pgns(wb):
                 "rate": str(row[rate_col]),
                 "source_document": str(row[document_col]),
                 "spns": [],
-            }
-            result.append(current_pgn)
+            },
+        )
+        result[pgn_id] = current_pgn
 
         # Only append SPNs that are valid
         spn_id = row[spn_id_col] or ""
@@ -279,7 +279,9 @@ def extract_pgns(wb):
                 {"id": int(spn_id), "start_pos": str(row[spn_position_col])}
             )
 
-    return dedup_and_flag_discrepancies(result)
+    return dedup_and_flag_discrepancies(
+        result.values(), print_suffix=" for PGNs"
+    )
 
 
 def extract_industry_groups(wb):
