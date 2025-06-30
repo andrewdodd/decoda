@@ -1,6 +1,48 @@
+[project]
+name = "decoda"
+version = "0.2.8.dev0"
+description = ""
+authors = [
+    {name = "Andrew Dodd",email = "andrew.john.dodd@gmail.com"}
+]
+license = {text = "MIT License"}
+readme = "README.md"
+requires-python = ">=3.9"
+dependencies = [
+    "attrs (>=25.3.0,<26.0.0)"
+]
+
+[project.optional-dependencies]
+sae_spec_converter = [
+	# Installing pretty_j1939 instead of its dependencies, even
+	# though we don't really use it directly (i.e. is it here just so
+	# the copied create_j1939db_json.py file works)
+	"pretty_j1939",
+	"xlrd2",
+	"pandas",
+	"openpyxl", # Needed by pandas to read XLSX files
+]
+
+[project.scripts]
+json_from_digital_annex="decoda.sae_spec_converter.json_from_da:main"
+json_from_isobus_xlsx="decoda.sae_spec_converter.json_from_isobus_xlsx:main"
+enrich_spec="decoda.sae_spec_converter.enrich_spec:main"
+correct_spec="decoda.sae_spec_converter.correct_spec:main"
+remove_bad_items="decoda.sae_spec_converter.remove_bad_items:main"
+
+
+[tool.poetry]
+packages = [
+	{include="decoda", from="src"},
+]
+
+
+[tool.poetry.group.dev.dependencies]
+pytest = "^8.4.1"
+
 [build-system]
-requires = ["setuptools>=40.6.0", "wheel"]
-build-backend = "setuptools.build_meta"
+requires = ["poetry-core>=2.0.0,<3.0.0"]
+build-backend = "poetry.core.masonry.api"
 
 [tool.black]
 line-length = 79

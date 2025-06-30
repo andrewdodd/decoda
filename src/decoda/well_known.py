@@ -110,7 +110,9 @@ def fmi_ce(value, *args, **kwargs):
 
 def fmi_na(value, *args, **kwargs):
     if value == 31:
-        return "Not available" # Casing similar to other not available encodings
+        return (
+            "Not available"  # Casing similar to other not available encodings
+        )
     return fmi_ce(value, *args, **kwargs)
 
 
